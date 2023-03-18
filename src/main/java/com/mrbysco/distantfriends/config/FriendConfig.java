@@ -18,6 +18,9 @@ public class FriendConfig {
 		public final ForgeConfigSpec.IntValue friendMinGroup;
 		public final ForgeConfigSpec.IntValue friendMaxGroup;
 
+		public final ForgeConfigSpec.BooleanValue playerMobsCompat;
+		public final ForgeConfigSpec.ConfigValue<List<? extends String>> playerMobsNameLinks;
+
 		Common(ForgeConfigSpec.Builder builder) {
 			builder.comment("Friends")
 					.push("friends");
@@ -42,6 +45,19 @@ public class FriendConfig {
 					.defineInRange("friendMaxGroup", 2, 1, Integer.MAX_VALUE);
 
 			builder.pop();
+
+			builder.comment("Compat")
+					.push("compat");
+
+			this.playerMobsCompat = builder
+					.comment("Add players from a Player Mobs whitelist to the Friends list [default: false]")
+					.define("playerMobsCompat", false);
+			this.playerMobsNameLinks = builder
+					.comment("The player mobs Name Links")
+					.defineListAllowEmpty(List.of("playerMobsWhitelist"), () -> List.of(""), o ->
+							(o instanceof String string && string.startsWith("https://whitelist.gorymoon.se")));
+
+			builder.pop();
 		}
 	}
 
@@ -58,10 +74,12 @@ public class FriendConfig {
 	@SubscribeEvent
 	public static void onLoad(final ModConfigEvent.Loading configEvent) {
 		DistantFriends.LOGGER.debug("Loaded Distant Friends' config file {}", configEvent.getConfig().getFileName());
+		FriendNamesCache.refreshCache();
 	}
 
 	@SubscribeEvent
 	public static void onFileChange(final ModConfigEvent.Reloading configEvent) {
 		DistantFriends.LOGGER.warn("Distant Friends' config just got changed on the file system!");
+		FriendNamesCache.refreshCache();
 	}
 }

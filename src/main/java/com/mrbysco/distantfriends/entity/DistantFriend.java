@@ -2,8 +2,8 @@ package com.mrbysco.distantfriends.entity;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-import com.mrbysco.distantfriends.config.FriendConfig;
-import com.mrbysco.distantfriends.entity.goal.FakeMovementGoal;
+import com.mrbysco.distantfriends.DistantFriends;
+import com.mrbysco.distantfriends.config.FriendNamesCache;
 import com.mrbysco.distantfriends.entity.goal.LookedAtGoal;
 import com.mrbysco.distantfriends.registry.FriendSerializers;
 import net.minecraft.client.Minecraft;
@@ -128,9 +128,8 @@ public class DistantFriend extends PathfinderMob {
 	protected void registerGoals() {
 		super.registerGoals();
 		this.goalSelector.addGoal(0, new FloatGoal(this));
-		this.goalSelector.addGoal(1, new FakeMovementGoal(this));
+		this.goalSelector.addGoal(1, new LookedAtGoal(this));
 		this.goalSelector.addGoal(2, new LookAtPlayerGoal(this, Player.class, 128.0F, 0.75F, false));
-		this.goalSelector.addGoal(3, new LookedAtGoal(this));
 		this.goalSelector.addGoal(4, new AvoidEntityGoal<>(this, Player.class, 32.0F, 1.0F, 1.33D, EntitySelector.NO_SPECTATORS::test));
 
 		this.goalSelector.addGoal(6, new StrollWhenOutOfSight(this));
@@ -230,6 +229,8 @@ public class DistantFriend extends PathfinderMob {
 	@Override
 	public void addAdditionalSaveData(CompoundTag tag) {
 		super.addAdditionalSaveData(tag);
+		tag.putBoolean("inView", isInView());
+		tag.putBoolean("lookedAt", isLookedAt());
 		tag.putBoolean("gameProfileExists", entityData.get(GAMEPROFILE).isPresent());
 		if (getGameProfile().isPresent()) {
 			tag.put("gameProfile", NbtUtils.writeGameProfile(new CompoundTag(), entityData.get(GAMEPROFILE).get()));
@@ -239,6 +240,8 @@ public class DistantFriend extends PathfinderMob {
 	@Override
 	public void load(CompoundTag compound) {
 		super.load(compound);
+		setInView(compound.getBoolean("inView"));
+		setLookedAt(compound.getBoolean("lookedAt"));
 		entityData.set(GAMEPROFILE, !compound.getBoolean("gameProfileExists") ? Optional.empty() :
 				Optional.ofNullable(NbtUtils.readGameProfile(compound.getCompound("gameProfile"))));
 	}
@@ -248,9 +251,11 @@ public class DistantFriend extends PathfinderMob {
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
 		SpawnGroupData data = super.finalizeSpawn(level, difficultyIn, reason, spawnDataIn, dataTag);
 
-		List<? extends String> friends = FriendConfig.COMMON.friends.get();
-		if (random.nextDouble() <= 0.75 && !friends.isEmpty()) {
-			this.setGameProfile(new GameProfile((UUID) null, friends.get(random.nextInt(friends.size()))));
+		List<String> friends = FriendNamesCache.nameList;
+		if (!friends.isEmpty()) {
+			String name = friends.get(random.nextInt(friends.size()));
+			DistantFriends.LOGGER.info("Spawned Distant friend with name {}", name);
+			this.setGameProfile(new GameProfile((UUID) null, name));
 			this.getGameProfile().ifPresent(profile -> setCustomName(new TextComponent(profile.getName())));
 		}
 
