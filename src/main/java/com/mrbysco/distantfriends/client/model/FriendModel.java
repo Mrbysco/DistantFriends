@@ -10,7 +10,6 @@ import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.util.Mth;
 
 public class FriendModel extends PlayerModel<DistantFriend> {
 	public boolean lookedAt;
@@ -43,7 +42,7 @@ public class FriendModel extends PlayerModel<DistantFriend> {
 		//Make crouch if looked at
 		this.crouching = friend.isCrouching();
 
-		if(friend.isAggressive()) {
+		if (friend.isAggressive()) {
 			rightArm.xRot = -1.0F;
 		}
 	}

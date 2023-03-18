@@ -8,6 +8,7 @@ import com.mrbysco.distantfriends.entity.DistantFriend;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
@@ -39,6 +40,13 @@ public class FriendRenderer extends MobRenderer<DistantFriend, FriendModel> {
 		this.addLayer(new ItemInHandLayer<>(this));
 		this.addLayer(new ElytraLayer<>(this, context.getModelSet()));
 		this.addLayer(new CustomHeadLayer<>(this, context.getModelSet()));
+	}
+
+	@Override
+	public void render(DistantFriend playerStatue, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int packedLightIn) {
+		this.model = playerStatue.isSlim() ? this.slimPlayerModel : playerModel;
+
+		super.render(playerStatue, entityYaw, partialTicks, poseStack, bufferSource, packedLightIn);
 	}
 
 	protected void scale(DistantFriend friend, PoseStack poseStack, float partialTickTime) {
