@@ -43,18 +43,14 @@ public class FriendModel extends PlayerModel<DistantFriend> {
 		//Make crouch if looked at
 		this.crouching = friend.isCrouching();
 
-		animatePunch(this.rightArm, friend.isAggressive(), this.attackTime, ageInTicks);
+		if(friend.isAggressive()) {
+			rightArm.xRot = -1.0F;
+		}
 	}
 
-	public static void animatePunch(ModelPart rightArm, boolean p_102105_, float p_102106_, float p_102107_) {
-		float f = Mth.sin(p_102106_ * (float) Math.PI);
-		float f1 = Mth.sin((1.0F - (1.0F - p_102106_) * (1.0F - p_102106_)) * (float) Math.PI);
-		rightArm.zRot = 0.0F;
-		rightArm.yRot = 0.1F - f * 0.6F;
-		float f2 = -(float) Math.PI / (p_102105_ ? 1.5F : 2.25F);
-		rightArm.xRot = f2;
-		rightArm.xRot += f * 1.2F - f1 * 0.4F;
-		AnimationUtils.bobModelPart(rightArm, p_102107_, -1.0F);
+	public static void animatePunch(ModelPart rightArm, boolean aggressive, float unused, float unused2) {
+
+		AnimationUtils.bobModelPart(rightArm, unused2, -1.0F);
 	}
 
 	@Override
