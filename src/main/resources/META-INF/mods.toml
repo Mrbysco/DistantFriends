@@ -1,0 +1,20 @@
+modLoader="javafml"
+loaderVersion="[40,)"
+issueTrackerURL="https://github.com/Mrbysco/DistantFriends/issues"
+license="MIT"
+
+[[mods]]
+modId="distantfriends"
+version="${file.jarVersion}"
+displayName="Distant Friends"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/distantfriends"
+authors="Mrbysco, ShyNieke"
+description='''
+Don't mind them, they just like looking at you
+'''
+[[dependencies.distantfriends]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.18.2,1.19)"
+ordering="NONE"
+side="BOTH"
