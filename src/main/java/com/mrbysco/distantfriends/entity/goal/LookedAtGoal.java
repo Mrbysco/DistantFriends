@@ -15,7 +15,7 @@ public class LookedAtGoal extends Goal {
 	@Nullable
 	private Player player;
 	private final DistantFriend friend;
-	private Random random;
+	private final Random random;
 	private int crouchInterval = 10;
 	private int punchInterval = 5;
 
@@ -84,7 +84,7 @@ public class LookedAtGoal extends Goal {
 		if (friend.isLookedAt()) {
 			if (player != null)
 				friend.getLookControl().setLookAt(player.getX(), player.getY(), player.getZ());
-			
+
 			if (friend.tickCount % crouchInterval == 0) {
 				crouchInterval = random.nextInt(50) + 10;
 				Pose pose = friend.isCrouching() ? Pose.STANDING : Pose.CROUCHING;
