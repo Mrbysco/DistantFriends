@@ -58,7 +58,6 @@ public class LookedAtGoal extends Goal {
 
 	@Override
 	public void tick() {
-		System.out.println("hey");
 		boolean inView = false;
 		if (this.player != null) {
 			boolean lookingAtMe = friend.isLookingAtMe(player);
