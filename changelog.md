@@ -1,1 +1,1 @@
-* Remove leftover debug code
+* Add Simplified Chinese language file courtesy of [Kasualix](https://github.com/Mrbysco/DistantFriends/pull/1)
