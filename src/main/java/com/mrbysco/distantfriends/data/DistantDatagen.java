@@ -1,31 +1,30 @@
 package com.mrbysco.distantfriends.data;
 
-import com.google.common.collect.ImmutableList;
-import com.google.gson.JsonElement;
-import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.JsonOps;
 import com.mrbysco.distantfriends.DistantFriends;
 import com.mrbysco.distantfriends.registry.FriendRegistry;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.Registry;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.loot.EntityLoot;
+import net.minecraft.data.PackOutput;
+import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
-import net.minecraft.resources.RegistryOps;
+import net.minecraft.data.registries.VanillaRegistries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.LootTable.Builder;
 import net.minecraft.world.level.storage.loot.LootTables;
 import net.minecraft.world.level.storage.loot.ValidationContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.common.data.JsonCodecProvider;
+import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
 import net.minecraftforge.common.data.LanguageProvider;
 import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.common.world.ForgeBiomeModifiers;
@@ -37,64 +36,70 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DistantDatagen {
+
 	@SubscribeEvent
 	public static void gatherData(GatherDataEvent event) {
-		final RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, RegistryAccess.builtinCopy());
 		DataGenerator generator = event.getGenerator();
-		ExistingFileHelper helper = event.getExistingFileHelper();
-
+		PackOutput packOutput = generator.getPackOutput();
 
 		if (event.includeServer()) {
-			generator.addProvider(true, new Loots(generator));
+			generator.addProvider(true, new Loots(packOutput));
 
-			final HolderSet.Named<Biome> overworldTag = new HolderSet.Named<>(ops.registry(Registry.BIOME_REGISTRY).get(),
-					BiomeTags.IS_OVERWORLD);
-			final BiomeModifier addSpawn = ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(
-					overworldTag,
-					new MobSpawnSettings.SpawnerData(FriendRegistry.FRIEND.get(), 20, 1, 2));
-
-			generator.addProvider(event.includeServer(), JsonCodecProvider.forDatapackRegistry(
-					generator, helper, DistantFriends.MOD_ID, ops, ForgeRegistries.Keys.BIOME_MODIFIERS,
-					Map.of(
-							new ResourceLocation(DistantFriends.MOD_ID, "add_distant_friend"), addSpawn
-					)
-			));
+			generator.addProvider(event.includeServer(), new DatapackBuiltinEntriesProvider(
+					packOutput, CompletableFuture.supplyAsync(DistantDatagen::getProvider), Set.of(DistantFriends.MOD_ID)));
 		}
 		if (event.includeClient()) {
-			generator.addProvider(true, new Language(generator));
+			generator.addProvider(true, new Language(packOutput));
 		}
 	}
 
+	private static HolderLookup.Provider getProvider() {
+		final RegistrySetBuilder registryBuilder = new RegistrySetBuilder();
+		registryBuilder.add(ForgeRegistries.Keys.BIOME_MODIFIERS, context -> {
+			final HolderGetter<Biome> biomeHolderGetter = context.lookup(Registries.BIOME);
+			final BiomeModifier addSpawn = ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(
+					biomeHolderGetter.getOrThrow(BiomeTags.IS_OVERWORLD),
+					new MobSpawnSettings.SpawnerData(FriendRegistry.FRIEND.get(), 20, 1, 2));
+
+			context.register(createKey("add_distant_friend"), addSpawn);
+		});
+		// We need the BIOME registry to be present so we can use a biome tag, doesn't matter that it's empty
+		registryBuilder.add(Registries.BIOME, $ -> {
+		});
+		RegistryAccess.Frozen regAccess = RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY);
+		return registryBuilder.buildPatch(regAccess, VanillaRegistries.createLookup());
+	}
+
+	private static ResourceKey<BiomeModifier> createKey(String name) {
+		return ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS, new ResourceLocation(DistantFriends.MOD_ID, name));
+	}
+
 	private static class Loots extends LootTableProvider {
-		public Loots(DataGenerator gen) {
-			super(gen);
+		public Loots(PackOutput packOutput) {
+			super(packOutput, Set.of(), List.of(
+					new SubProviderEntry(FriendLootProvider::new, LootContextParamSets.ENTITY)
+			));
 		}
 
-		@Override
-		protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, Builder>>>, LootContextParamSet>> getTables() {
-			return ImmutableList.of(
-					Pair.of(SlimeLootTables::new, LootContextParamSets.ENTITY)
-			);
-		}
-
-		public static class SlimeLootTables extends EntityLoot {
+		public static class FriendLootProvider extends EntityLootSubProvider {
+			protected FriendLootProvider() {
+				super(FeatureFlags.REGISTRY.allFlags());
+			}
 
 			@Override
-			protected void addTables() {
+			public void generate() {
 				this.add(FriendRegistry.FRIEND.get(), LootTable.lootTable());
 			}
 
 			@Override
-			protected Iterable<EntityType<?>> getKnownEntities() {
-				Stream<EntityType<?>> entityTypeStream = FriendRegistry.ENTITIES.getEntries().stream().map(RegistryObject::get);
-				return entityTypeStream::iterator;
+			protected Stream<EntityType<?>> getKnownEntityTypes() {
+				return FriendRegistry.ENTITIES.getEntries().stream().map(RegistryObject::get);
 			}
 		}
 
@@ -105,8 +110,8 @@ public class DistantDatagen {
 	}
 
 	private static class Language extends LanguageProvider {
-		public Language(DataGenerator gen) {
-			super(gen, DistantFriends.MOD_ID, "en_us");
+		public Language(PackOutput packOutput) {
+			super(packOutput, DistantFriends.MOD_ID, "en_us");
 		}
 
 		@Override
