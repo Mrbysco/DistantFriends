@@ -12,11 +12,12 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
@@ -43,15 +44,14 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.UUID;
 
 public class DistantFriend extends PathfinderMob {
-	private static final EntityDataAccessor<Optional<GameProfile>> GAMEPROFILE = SynchedEntityData.defineId(DistantFriend.class, FriendSerializers.OPTIONAL_GAME_PROFILE);
+	private static final EntityDataAccessor<Optional<GameProfile>> GAMEPROFILE = SynchedEntityData.defineId(DistantFriend.class, FriendSerializers.OPTIONAL_GAME_PROFILE.get());
 	private static final EntityDataAccessor<Boolean> DATA_IN_VIEW = SynchedEntityData.defineId(DistantFriend.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> DATA_LOOKED_AT = SynchedEntityData.defineId(DistantFriend.class, EntityDataSerializers.BOOLEAN);
 
@@ -166,8 +166,8 @@ public class DistantFriend extends PathfinderMob {
 	public void setItemSlot(EquipmentSlot equipmentSlot, ItemStack stack) {
 		this.verifyEquippedItem(stack);
 		switch (equipmentSlot.getType()) {
-			case HAND -> this.equipEventAndSound(this.handItems.set(equipmentSlot.getIndex(), stack));
-			case ARMOR -> this.equipEventAndSound(this.armorItems.set(equipmentSlot.getIndex(), stack));
+			case HAND -> this.onEquipItem(equipmentSlot, this.handItems.set(equipmentSlot.getIndex(), stack), stack);
+			case ARMOR -> this.onEquipItem(equipmentSlot, this.armorItems.set(equipmentSlot.getIndex(), stack), stack);
 		}
 	}
 
@@ -256,7 +256,7 @@ public class DistantFriend extends PathfinderMob {
 			String name = friends.get(random.nextInt(friends.size()));
 			DistantFriends.LOGGER.info("Spawned Distant friend with name {}", name);
 			this.setGameProfile(new GameProfile((UUID) null, name));
-			this.getGameProfile().ifPresent(profile -> setCustomName(new TextComponent(profile.getName())));
+			this.getGameProfile().ifPresent(profile -> setCustomName(Component.literal(profile.getName())));
 		}
 
 		return data;
@@ -273,12 +273,12 @@ public class DistantFriend extends PathfinderMob {
 	}
 
 	public static boolean checkFriendSpawn(EntityType<? extends DistantFriend> entityType, ServerLevelAccessor levelAccessor,
-										   MobSpawnType spawnType, BlockPos pos, Random random) {
+										   MobSpawnType spawnType, BlockPos pos, RandomSource random) {
 		return levelAccessor.getDifficulty() != Difficulty.PEACEFUL && isDarkEnoughToSpawn(levelAccessor, pos, random) &&
 				checkMobSpawnRules(entityType, levelAccessor, spawnType, pos, random);
 	}
 
-	public static boolean isDarkEnoughToSpawn(ServerLevelAccessor levelAccessor, BlockPos pos, Random random) {
+	public static boolean isDarkEnoughToSpawn(ServerLevelAccessor levelAccessor, BlockPos pos, RandomSource random) {
 		if (levelAccessor.getBrightness(LightLayer.SKY, pos) > random.nextInt(32)) {
 			return false;
 		} else if (levelAccessor.getBrightness(LightLayer.BLOCK, pos) > 0) {

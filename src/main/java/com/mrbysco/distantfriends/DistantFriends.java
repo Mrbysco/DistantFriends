@@ -11,7 +11,6 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
@@ -26,17 +25,13 @@ public class DistantFriends {
 		eventBus.register(FriendConfig.class);
 
 		FriendRegistry.ENTITIES.register(eventBus);
+		FriendSerializers.ENTITY_DATA_SERIALIZER.register(eventBus);
 
-		eventBus.addListener(this::setup);
+		eventBus.addListener(FriendRegistry::setupEntities);
 		eventBus.addListener(FriendRegistry::registerEntityAttributes);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			eventBus.addListener(ClientHandler::registerEntityRenders);
 		});
-	}
-
-	private void setup(final FMLCommonSetupEvent event) {
-		FriendRegistry.setupEntities();
-		FriendSerializers.init();
 	}
 }

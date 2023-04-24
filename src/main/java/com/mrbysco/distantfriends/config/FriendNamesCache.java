@@ -11,7 +11,7 @@ import java.util.List;
 
 public class FriendNamesCache {
 
-	public static List<String> nameList = new ArrayList<>();
+	public static final List<String> nameList = new ArrayList<>();
 
 	public static void refreshCache() {
 		DistantFriends.LOGGER.info("Refreshing friends cache");

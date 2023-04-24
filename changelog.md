@@ -1,1 +1,2 @@
-* Add Simplified Chinese language file courtesy of [Kasualix](https://github.com/Mrbysco/DistantFriends/pull/1)
+* Initial update to 1.19.2
+* Spawn config options have been removed in favor of changing it using datapacks

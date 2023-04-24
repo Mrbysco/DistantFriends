@@ -12,11 +12,7 @@ import java.util.List;
 public class FriendConfig {
 
 	public static class Common {
-
 		public final ConfigValue<List<? extends String>> friends;
-		public final ForgeConfigSpec.IntValue friendWeight;
-		public final ForgeConfigSpec.IntValue friendMinGroup;
-		public final ForgeConfigSpec.IntValue friendMaxGroup;
 
 		public final ForgeConfigSpec.BooleanValue playerMobsCompat;
 		public final ForgeConfigSpec.ConfigValue<List<? extends String>> playerMobsNameLinks;
@@ -28,21 +24,6 @@ public class FriendConfig {
 			friends = builder
 					.comment("A list of users who can be chosen when it spawns a distant friend")
 					.defineList("friends", List.of("darkosto"), o -> (o instanceof String));
-
-			builder.pop();
-
-			builder.comment("Spawning")
-					.push("spawning");
-
-			this.friendWeight = builder
-					.comment("The spawning weight of Friend's (0 = disabled) [default: 20]")
-					.defineInRange("friendWeight", 20, 0, Integer.MAX_VALUE);
-			this.friendMinGroup = builder
-					.comment("The minimum number of Friend's in a group [default:1]")
-					.defineInRange("friendMinGroup", 1, 1, Integer.MAX_VALUE);
-			this.friendMaxGroup = builder
-					.comment("The maximum number of Friend's in a group [default: 2]")
-					.defineInRange("friendMaxGroup", 2, 1, Integer.MAX_VALUE);
 
 			builder.pop();
 

@@ -1,21 +1,21 @@
 package com.mrbysco.distantfriends.entity.goal;
 
 import com.mrbysco.distantfriends.entity.DistantFriend;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.EnumSet;
-import java.util.Random;
 
 public class LookedAtGoal extends Goal {
 	private final TargetingConditions lookTargeting = TargetingConditions.forNonCombat().range(256);
 	@Nullable
 	private Player player;
 	private final DistantFriend friend;
-	private final Random random;
+	private final RandomSource random;
 	private int crouchInterval = 10;
 	private int punchInterval = 5;
 
