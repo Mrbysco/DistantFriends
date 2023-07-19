@@ -2,7 +2,6 @@ package com.mrbysco.distantfriends.entity;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-import com.mrbysco.distantfriends.DistantFriends;
 import com.mrbysco.distantfriends.config.FriendNamesCache;
 import com.mrbysco.distantfriends.entity.goal.LookedAtGoal;
 import com.mrbysco.distantfriends.registry.FriendSerializers;
