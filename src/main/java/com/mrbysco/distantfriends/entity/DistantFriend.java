@@ -255,7 +255,7 @@ public class DistantFriend extends PathfinderMob {
 		List<String> friends = FriendNamesCache.nameList;
 		if (!friends.isEmpty()) {
 			String name = friends.get(random.nextInt(friends.size()));
-			DistantFriends.LOGGER.info("Spawned Distant friend with name {}", name);
+//			DistantFriends.LOGGER.info("Spawned Distant friend with name {}", name);
 			this.setGameProfile(new GameProfile((UUID) null, name));
 			this.getGameProfile().ifPresent(profile -> setCustomName(Component.literal(profile.getName())));
 		}
