@@ -1,1 +1,1 @@
-* Initial update to 1.20
+* Remove unnecessary logging of every distant friend spawned
