@@ -16,10 +16,6 @@ public class FriendConfig {
 		public final ConfigValue<List<? extends String>> friends;
 		public final ForgeConfigSpec.BooleanValue addWhitelistPlayers;
 
-		public final ForgeConfigSpec.IntValue friendWeight;
-		public final ForgeConfigSpec.IntValue friendMinGroup;
-		public final ForgeConfigSpec.IntValue friendMaxGroup;
-
 		public final ForgeConfigSpec.BooleanValue playerMobsCompat;
 		public final ForgeConfigSpec.ConfigValue<List<? extends String>> playerMobsNameLinks;
 
