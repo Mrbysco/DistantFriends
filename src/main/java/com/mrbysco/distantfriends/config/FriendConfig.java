@@ -14,6 +14,8 @@ public class FriendConfig {
 	public static class Common {
 
 		public final ConfigValue<List<? extends String>> friends;
+		public final ForgeConfigSpec.BooleanValue addWhitelistPlayers;
+
 		public final ForgeConfigSpec.IntValue friendWeight;
 		public final ForgeConfigSpec.IntValue friendMinGroup;
 		public final ForgeConfigSpec.IntValue friendMaxGroup;
@@ -28,19 +30,22 @@ public class FriendConfig {
 			friends = builder
 					.comment("A list of users who can be chosen when it spawns a distant friend")
 					.defineList("friends", List.of("darkosto"), o -> (o instanceof String));
+			addWhitelistPlayers = builder
+					.comment("Add the players from the whitelist to the Friends list [default: true]")
+					.define("addWhitelistPlayers", true);
 
 			builder.pop();
 
 			builder.comment("Spawning")
 					.push("spawning");
 
-			this.friendWeight = builder
+			friendWeight = builder
 					.comment("The spawning weight of Friend's (0 = disabled) [default: 20]")
 					.defineInRange("friendWeight", 20, 0, Integer.MAX_VALUE);
-			this.friendMinGroup = builder
+			friendMinGroup = builder
 					.comment("The minimum number of Friend's in a group [default:1]")
 					.defineInRange("friendMinGroup", 1, 1, Integer.MAX_VALUE);
-			this.friendMaxGroup = builder
+			friendMaxGroup = builder
 					.comment("The maximum number of Friend's in a group [default: 2]")
 					.defineInRange("friendMaxGroup", 2, 1, Integer.MAX_VALUE);
 
@@ -49,10 +54,10 @@ public class FriendConfig {
 			builder.comment("Compat")
 					.push("compat");
 
-			this.playerMobsCompat = builder
+			playerMobsCompat = builder
 					.comment("Add players from a Player Mobs whitelist to the Friends list [default: false]")
 					.define("playerMobsCompat", false);
-			this.playerMobsNameLinks = builder
+			playerMobsNameLinks = builder
 					.comment("The player mobs Name Links")
 					.defineListAllowEmpty(List.of("playerMobsWhitelist"), () -> List.of(""), o ->
 							(o instanceof String string && string.startsWith("https://whitelist.gorymoon.se")));
@@ -79,7 +84,7 @@ public class FriendConfig {
 
 	@SubscribeEvent
 	public static void onFileChange(final ModConfigEvent.Reloading configEvent) {
-		DistantFriends.LOGGER.warn("Distant Friends' config just got changed on the file system!");
+		DistantFriends.LOGGER.debug("Distant Friends' config just got changed on the file system!");
 		FriendNamesCache.refreshCache();
 	}
 }
