@@ -1,6 +1,8 @@
 package com.mrbysco.distantfriends.config;
 
 import com.mrbysco.distantfriends.DistantFriends;
+import net.minecraft.server.players.UserWhiteList;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,6 +20,14 @@ public class FriendNamesCache {
 
 		nameList.clear();
 		nameList.addAll(FriendConfig.COMMON.friends.get());
+
+		if (FriendConfig.COMMON.addWhitelistPlayers.get() && ServerLifecycleHooks.getCurrentServer() != null) {
+			UserWhiteList whitelist = ServerLifecycleHooks.getCurrentServer().getPlayerList().getWhiteList();
+			String[] whitelisted = whitelist.getUserList();
+			for (String name : whitelisted) {
+				nameList.add(name);
+			}
+		}
 
 		if (FriendConfig.COMMON.playerMobsCompat.get()) {
 			List<? extends String> links = FriendConfig.COMMON.playerMobsNameLinks.get();
