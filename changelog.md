@@ -1,1 +1,1 @@
-* Add Simplified Chinese language file courtesy of [Kasualix](https://github.com/Mrbysco/DistantFriends/pull/1)
+* Remove unnecessary logging of every distant friend spawned
