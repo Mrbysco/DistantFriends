@@ -1,1 +1,1 @@
-* Remove unnecessary logging of every distant friend spawned
+* Add a config option that grabs whitelisted people to add to the list of possible friends
