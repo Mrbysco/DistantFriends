@@ -1,1 +1,1 @@
-* Add a config option that grabs whitelisted people to add to the list of possible friends
+* Change how the gameprofile gets saved on the Distant Friend mob
