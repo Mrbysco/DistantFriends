@@ -265,10 +265,10 @@ public class DistantFriend extends PathfinderMob {
 
 	public boolean isLookingAtMe(Player player) {
 		Vec3 vec3 = player.getViewVector(1.0F).normalize();
-		Vec3 vec31 = new Vec3(this.getX() - player.getX(), this.getEyeY() - player.getEyeY(), this.getZ() - player.getZ());
-		double d0 = vec31.length();
-		vec31 = vec31.normalize();
-		double d1 = vec3.dot(vec31);
+		Vec3 offsetVec = new Vec3(this.getX() - player.getX(), this.getEyeY() - player.getEyeY(), this.getZ() - player.getZ());
+		double d0 = offsetVec.length();
+		offsetVec = offsetVec.normalize();
+		double d1 = vec3.dot(offsetVec);
 		return d1 > 1.0D - 0.025D / d0 && player.hasLineOfSight(this);
 	}
 
