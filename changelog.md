@@ -1,1 +1,1 @@
-* Change how the gameprofile gets saved on the Distant Friend mob
+* Initial update to 1.20.2 (NeoForge)
