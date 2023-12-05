@@ -1,7 +1,6 @@
 package com.mrbysco.distantfriends.client.renderer;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mrbysco.distantfriends.client.model.FriendModel;
 import com.mrbysco.distantfriends.entity.DistantFriend;
@@ -19,12 +18,11 @@ import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.SkinManager;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.Map;
-
 public class FriendRenderer extends MobRenderer<DistantFriend, FriendModel> {
 	private final FriendModel playerModel;
 	private final FriendModel slimPlayerModel;
-	public static final ResourceLocation defaultTexture = DefaultPlayerSkin.getDefaultSkin();
+	public static final ResourceLocation defaultTexture = DefaultPlayerSkin.getDefaultTexture();
+	public static boolean isSlim = false;
 
 	public FriendRenderer(EntityRendererProvider.Context context) {
 		this(context, false);
@@ -46,7 +44,13 @@ public class FriendRenderer extends MobRenderer<DistantFriend, FriendModel> {
 
 	@Override
 	public void render(DistantFriend playerStatue, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int packedLightIn) {
-		this.model = playerStatue.isSlim() ? this.slimPlayerModel : playerModel;
+		SkinManager skinmanager = Minecraft.getInstance().getSkinManager();
+		if (playerStatue.getGameProfile().isPresent()) {
+			if (isSlim != skinmanager.getInsecureSkin(playerStatue.getGameProfile().get()).model().id().equals("slim"))
+				isSlim = !isSlim;
+		}
+
+		this.model = isSlim ? this.slimPlayerModel : playerModel;
 
 		super.render(playerStatue, entityYaw, partialTicks, poseStack, bufferSource, packedLightIn);
 	}
@@ -64,17 +68,7 @@ public class FriendRenderer extends MobRenderer<DistantFriend, FriendModel> {
 	}
 
 	private ResourceLocation getSkin(GameProfile gameProfile) {
-		if (!gameProfile.isComplete()) {
-			return defaultTexture;
-		} else {
-			final Minecraft minecraft = Minecraft.getInstance();
-			SkinManager skinManager = minecraft.getSkinManager();
-			final Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> loadSkinFromCache = skinManager.getInsecureSkinInformation(gameProfile); // returned map may or may not be typed
-			if (loadSkinFromCache.containsKey(MinecraftProfileTexture.Type.SKIN)) {
-				return skinManager.registerTexture(loadSkinFromCache.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN);
-			} else {
-				return DefaultPlayerSkin.getDefaultSkin(gameProfile.getId());
-			}
-		}
+		SkinManager skinmanager = Minecraft.getInstance().getSkinManager();
+		return skinmanager.getInsecureSkin(gameProfile).texture();
 	}
 }

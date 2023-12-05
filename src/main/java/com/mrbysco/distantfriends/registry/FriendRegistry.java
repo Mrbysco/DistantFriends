@@ -2,20 +2,21 @@ package com.mrbysco.distantfriends.registry;
 
 import com.mrbysco.distantfriends.DistantFriends;
 import com.mrbysco.distantfriends.entity.DistantFriend;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.event.entity.SpawnPlacementRegisterEvent;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.function.Supplier;
 
 public class FriendRegistry {
-	public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, DistantFriends.MOD_ID);
+	public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(Registries.ENTITY_TYPE, DistantFriends.MOD_ID);
 
-	public static final RegistryObject<EntityType<DistantFriend>> FRIEND = ENTITIES.register("friend",
+	public static final Supplier<EntityType<DistantFriend>> FRIEND = ENTITIES.register("friend",
 			() -> EntityType.Builder.<DistantFriend>of(DistantFriend::new, MobCategory.AMBIENT)
 					.sized(0.6F, 1.8F).clientTrackingRange(10).build("friend"));
 

@@ -2,7 +2,7 @@ package com.mrbysco.distantfriends.config;
 
 import com.mrbysco.distantfriends.DistantFriends;
 import net.minecraft.server.players.UserWhiteList;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.io.BufferedReader;
 import java.io.IOException;
