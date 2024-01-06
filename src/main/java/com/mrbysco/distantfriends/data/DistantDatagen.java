@@ -2,6 +2,7 @@ package com.mrbysco.distantfriends.data;
 
 import com.mrbysco.distantfriends.DistantFriends;
 import com.mrbysco.distantfriends.registry.FriendRegistry;
+import net.minecraft.core.Cloner;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
@@ -58,7 +59,7 @@ public class DistantDatagen {
 		}
 	}
 
-	private static HolderLookup.Provider getProvider() {
+	private static RegistrySetBuilder.PatchedRegistries getProvider() {
 		final RegistrySetBuilder registryBuilder = new RegistrySetBuilder();
 		registryBuilder.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, context -> {
 			final HolderGetter<Biome> biomeHolderGetter = context.lookup(Registries.BIOME);
@@ -68,11 +69,13 @@ public class DistantDatagen {
 
 			context.register(createKey("add_distant_friend"), addSpawn);
 		});
-		// We need the BIOME registry to be present so we can use a biome tag, doesn't matter that it's empty
+		// We need the BIOME registry to be present, so we can use a biome tag, doesn't matter that it's empty
 		registryBuilder.add(Registries.BIOME, $ -> {
 		});
 		RegistryAccess.Frozen regAccess = RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY);
-		return registryBuilder.buildPatch(regAccess, VanillaRegistries.createLookup());
+		Cloner.Factory cloner$factory = new Cloner.Factory();
+		net.neoforged.neoforge.registries.DataPackRegistriesHooks.getDataPackRegistriesWithDimensions().forEach(data -> data.runWithArguments(cloner$factory::addCodec));
+		return registryBuilder.buildPatch(regAccess, VanillaRegistries.createLookup(), cloner$factory);
 	}
 
 	private static ResourceKey<BiomeModifier> createKey(String name) {

@@ -9,7 +9,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.fml.loading.FMLEnvironment;
 import org.slf4j.Logger;
 
@@ -18,8 +17,7 @@ public class DistantFriends {
 	public static final Logger LOGGER = LogUtils.getLogger();
 	public static final String MOD_ID = "distantfriends";
 
-	public DistantFriends() {
-		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+	public DistantFriends(IEventBus eventBus) {
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, FriendConfig.commonSpec);
 		eventBus.register(FriendConfig.class);
 
