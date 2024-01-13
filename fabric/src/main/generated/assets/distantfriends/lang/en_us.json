@@ -1,0 +1,10 @@
+{
+  "entity.distantfriends.friend": "Distant Friend",
+  "text.autoconfig.distantfriends.option.compat": "Compat",
+  "text.autoconfig.distantfriends.option.compat.playerMobsCompat": "Player Mobs Compat",
+  "text.autoconfig.distantfriends.option.compat.playerMobsWhitelist": "Player Mobs Whitelist",
+  "text.autoconfig.distantfriends.option.general": "General",
+  "text.autoconfig.distantfriends.option.general.addWhitelistPlayers": "Add Whitelist Players",
+  "text.autoconfig.distantfriends.option.general.friends": "Friends",
+  "text.autoconfig.distantfriends.title": "Distant Friends"
+}

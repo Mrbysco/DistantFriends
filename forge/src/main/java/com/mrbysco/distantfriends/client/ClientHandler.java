@@ -1,0 +1,11 @@
+package com.mrbysco.distantfriends.client;
+
+import com.mrbysco.distantfriends.client.renderer.FriendRenderer;
+import com.mrbysco.distantfriends.registration.FriendRegistry;
+import net.minecraftforge.client.event.EntityRenderersEvent;
+
+public class ClientHandler {
+	public static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
+		event.registerEntityRenderer(FriendRegistry.FRIEND.get(), FriendRenderer::new);
+	}
+}

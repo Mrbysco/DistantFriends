@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "distantfriends",
+  "version": "${version}",
+  "name": "Distant Friends",
+  "description": "Don't mind them, they just like looking at you",
+  "authors": [
+    "Mrbysco"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/DistantFriends",
+    "sources": "https://github.com/Mrbysco/DistantFriends",
+    "issues": "https://github.com/Mrbysco/DistantFriends/issues"
+  },
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-datagen": [
+      "com.mrbysco.distantfriends.data.DistantDatagen"
+    ],
+    "main": [
+      "com.mrbysco.distantfriends.DistantFriendsFabric"
+    ],
+    "client": [
+      "com.mrbysco.distantfriends.DistantFriendsFabricClient"
+    ],
+    "modmenu": [
+      "com.mrbysco.distantfriends.config.DistantFriendsMenuIntegration"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.14",
+    "fabric": "*",
+    "minecraft": "~1.20",
+    "java": ">=17",
+    "cloth-config": ">=11.0.99"
+  }
+}
+
