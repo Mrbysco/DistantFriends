@@ -2,10 +2,10 @@ package com.mrbysco.distantfriends.config;
 
 import com.mrbysco.distantfriends.Constants;
 import com.mrbysco.distantfriends.FriendNamesCache;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec.ConfigValue;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.event.config.ModConfigEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
@@ -15,12 +15,12 @@ public class FriendConfigForge {
 	public static class Common {
 
 		public final ConfigValue<List<? extends String>> friends;
-		public final ForgeConfigSpec.BooleanValue addWhitelistPlayers;
+		public final ModConfigSpec.BooleanValue addWhitelistPlayers;
 
-		public final ForgeConfigSpec.BooleanValue playerMobsCompat;
+		public final ModConfigSpec.BooleanValue playerMobsCompat;
 		public final ConfigValue<List<? extends String>> playerMobsNameLinks;
 
-		Common(ForgeConfigSpec.Builder builder) {
+		Common(ModConfigSpec.Builder builder) {
 			builder.comment("Friends")
 					.push("friends");
 
@@ -49,11 +49,11 @@ public class FriendConfigForge {
 	}
 
 
-	public static final ForgeConfigSpec commonSpec;
+	public static final ModConfigSpec commonSpec;
 	public static final Common COMMON;
 
 	static {
-		final Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
+		final Pair<Common, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(Common::new);
 		commonSpec = specPair.getRight();
 		COMMON = specPair.getLeft();
 	}

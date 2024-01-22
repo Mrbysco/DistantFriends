@@ -6,12 +6,12 @@ import com.mrbysco.distantfriends.platform.services.IPlatformHelper;
 import com.mrbysco.distantfriends.registry.FriendSerializers;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.util.List;
 import java.util.Optional;
 
-public class ForgePlatformHelper implements IPlatformHelper {
+public class NeoForgePlatformHelper implements IPlatformHelper {
 
 	@Override
 	public EntityDataSerializer<Optional<GameProfile>> getGameProfileSerializer() {

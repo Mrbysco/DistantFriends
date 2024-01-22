@@ -7,20 +7,19 @@ import com.mrbysco.distantfriends.registration.FriendRegistry;
 import com.mrbysco.distantfriends.registry.FriendSerializers;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.event.entity.SpawnPlacementRegisterEvent;
 
 @Mod(Constants.MOD_ID)
-public class DistantFriendsForge {
+public class DistantFriendsNeoForge {
 
-	public DistantFriendsForge() {
+	public DistantFriendsNeoForge() {
 		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, FriendConfigForge.commonSpec);
 		eventBus.register(FriendConfigForge.class);
@@ -31,9 +30,9 @@ public class DistantFriendsForge {
 		eventBus.addListener(this::setupEntities);
 		eventBus.addListener(this::registerEntityAttributes);
 
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+		if (FMLEnvironment.dist.isClient()) {
 			eventBus.addListener(ClientHandler::registerEntityRenders);
-		});
+		}
 	}
 
 	public void setupEntities(SpawnPlacementRegisterEvent event) {

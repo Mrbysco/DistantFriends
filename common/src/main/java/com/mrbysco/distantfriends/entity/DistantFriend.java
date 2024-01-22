@@ -1,11 +1,10 @@
 package com.mrbysco.distantfriends.entity;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mrbysco.distantfriends.FriendNamesCache;
 import com.mrbysco.distantfriends.entity.goal.LookedAtGoal;
 import com.mrbysco.distantfriends.platform.Services;
-import net.minecraft.client.Minecraft;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
@@ -45,7 +44,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 public class DistantFriend extends PathfinderMob {
 	private static final EntityDataAccessor<Optional<GameProfile>> GAMEPROFILE = SynchedEntityData.defineId(DistantFriend.class, Services.PLATFORM.getGameProfileSerializer());
@@ -55,7 +53,6 @@ public class DistantFriend extends PathfinderMob {
 	private final NonNullList<ItemStack> handItems = NonNullList.withSize(2, ItemStack.EMPTY);
 	private final NonNullList<ItemStack> armorItems = NonNullList.withSize(4, ItemStack.EMPTY);
 	private final TargetingConditions findPlayerCondition = TargetingConditions.forNonCombat().range(16.0D);
-	private boolean isSlim = false;
 
 	public DistantFriend(EntityType<? extends PathfinderMob> entityType, Level level) {
 		super(entityType, level);
@@ -74,35 +71,7 @@ public class DistantFriend extends PathfinderMob {
 	}
 
 	public void setGameProfile(GameProfile playerProfile) {
-		SkullBlockEntity.updateGameprofile(playerProfile, (profile) -> {
-			entityData.set(GAMEPROFILE, Optional.of(profile));
-			this.setSlim(profile != null && profile.getId() != null && isSlimSkin(profile.getId()));
-		});
-
-		synchronized (this) {
-			getGameProfile().ifPresent(profile -> {
-				if (this.level() != null && this.level().isClientSide && profile != null && profile.isComplete()) {
-					Minecraft.getInstance().getSkinManager().registerSkins(profile, (textureType, textureLocation, profileTexture) -> {
-						if (textureType.equals(MinecraftProfileTexture.Type.SKIN)) {
-							String metadata = profileTexture.getMetadata("model");
-							this.setSlim(metadata != null && metadata.equals("slim"));
-						}
-					}, true);
-				}
-			});
-		}
-	}
-
-	public boolean isSlimSkin(UUID playerUUID) {
-		return (playerUUID.hashCode() & 1) == 1;
-	}
-
-	public void setSlim(boolean slim) {
-		this.isSlim = slim;
-	}
-
-	public boolean isSlim() {
-		return this.isSlim;
+		this.entityData.set(GAMEPROFILE, Optional.ofNullable(playerProfile));
 	}
 
 	public boolean isLookedAt() {
@@ -168,25 +137,6 @@ public class DistantFriend extends PathfinderMob {
 		return HumanoidArm.RIGHT;
 	}
 
-	public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
-		if (GAMEPROFILE.equals(key)) {
-			synchronized (this) {
-				getGameProfile().ifPresent(profile -> {
-					if (this.level() != null && this.level().isClientSide && profile != null && profile.isComplete()) {
-						Minecraft.getInstance().getSkinManager().registerSkins(profile, (textureType, textureLocation, profileTexture) -> {
-							if (textureType.equals(MinecraftProfileTexture.Type.SKIN)) {
-								String metadata = profileTexture.getMetadata("model");
-								this.setSlim(metadata != null && metadata.equals("slim"));
-							}
-						}, true);
-					}
-				});
-			}
-		}
-
-		super.onSyncedDataUpdated(key);
-	}
-
 	@Override
 	public boolean isInvisibleTo(Player player) {
 		if (player.hasLineOfSight(this) && this.tickCount < 100) {
@@ -247,7 +197,10 @@ public class DistantFriend extends PathfinderMob {
 		if (!friends.isEmpty()) {
 			String name = friends.get(random.nextInt(friends.size()));
 //			DistantFriends.LOGGER.info("Spawned Distant friend with name {}", name);
-			this.setGameProfile(new GameProfile((UUID) null, name));
+			SkullBlockEntity.fetchGameProfile(name)
+					.thenAccept(
+							profile -> this.setGameProfile(profile.orElse(new GameProfile(Util.NIL_UUID, name)))
+					);
 			this.getGameProfile().ifPresent(profile -> setCustomName(Component.literal(profile.getName())));
 		}
 

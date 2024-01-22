@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class FriendNamesCache {
@@ -23,9 +24,7 @@ public class FriendNamesCache {
 		if (Services.PLATFORM.addWhitelistPlayers() && Services.PLATFORM.getServer() != null) {
 			UserWhiteList whitelist = Services.PLATFORM.getServer().getPlayerList().getWhiteList();
 			String[] whitelisted = whitelist.getUserList();
-			for (String name : whitelisted) {
-				nameList.add(name);
-			}
+			Collections.addAll(nameList, whitelisted);
 		}
 
 		if (Services.PLATFORM.playerMobsCompat()) {
