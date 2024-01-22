@@ -11,7 +11,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.SpawnPlacementRegisterEvent;
@@ -19,8 +18,7 @@ import net.neoforged.neoforge.event.entity.SpawnPlacementRegisterEvent;
 @Mod(Constants.MOD_ID)
 public class DistantFriendsNeoForge {
 
-	public DistantFriendsNeoForge() {
-		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+	public DistantFriendsNeoForge(IEventBus eventBus) {
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, FriendConfigForge.commonSpec);
 		eventBus.register(FriendConfigForge.class);
 

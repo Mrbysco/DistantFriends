@@ -3,8 +3,8 @@ package com.mrbysco.distantfriends.data;
 import com.mrbysco.distantfriends.Constants;
 import com.mrbysco.distantfriends.registration.FriendRegistry;
 import com.mrbysco.distantfriends.registration.RegistryObject;
+import net.minecraft.core.Cloner;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -58,7 +58,7 @@ public class DistantDatagen {
 		}
 	}
 
-	private static HolderLookup.Provider getProvider() {
+	private static RegistrySetBuilder.PatchedRegistries getProvider() {
 		final RegistrySetBuilder registryBuilder = new RegistrySetBuilder();
 		registryBuilder.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, context -> {
 			final HolderGetter<Biome> biomeHolderGetter = context.lookup(Registries.BIOME);
@@ -72,7 +72,9 @@ public class DistantDatagen {
 		registryBuilder.add(Registries.BIOME, $ -> {
 		});
 		RegistryAccess.Frozen regAccess = RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY);
-		return registryBuilder.buildPatch(regAccess, VanillaRegistries.createLookup());
+		Cloner.Factory cloner$factory = new Cloner.Factory();
+		net.neoforged.neoforge.registries.DataPackRegistriesHooks.getDataPackRegistriesWithDimensions().forEach(data -> data.runWithArguments(cloner$factory::addCodec));
+		return registryBuilder.buildPatch(regAccess, VanillaRegistries.createLookup(), cloner$factory);
 	}
 
 	private static ResourceKey<BiomeModifier> createKey(String name) {
