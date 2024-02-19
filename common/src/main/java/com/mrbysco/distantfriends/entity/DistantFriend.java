@@ -81,7 +81,7 @@ public class DistantFriend extends PathfinderMob {
 
 		synchronized (this) {
 			getGameProfile().ifPresent(profile -> {
-				if (this.level() != null && this.level().isClientSide && profile != null && profile.isComplete()) {
+				if (this.level != null && this.level.isClientSide && profile != null && profile.isComplete()) {
 					Minecraft.getInstance().getSkinManager().registerSkins(profile, (textureType, textureLocation, profileTexture) -> {
 						if (textureType.equals(MinecraftProfileTexture.Type.SKIN)) {
 							String metadata = profileTexture.getMetadata("model");
@@ -172,7 +172,7 @@ public class DistantFriend extends PathfinderMob {
 		if (GAMEPROFILE.equals(key)) {
 			synchronized (this) {
 				getGameProfile().ifPresent(profile -> {
-					if (this.level() != null && this.level().isClientSide && profile != null && profile.isComplete()) {
+					if (this.level != null && this.level.isClientSide && profile != null && profile.isComplete()) {
 						Minecraft.getInstance().getSkinManager().registerSkins(profile, (textureType, textureLocation, profileTexture) -> {
 							if (textureType.equals(MinecraftProfileTexture.Type.SKIN)) {
 								String metadata = profileTexture.getMetadata("model");
@@ -204,12 +204,12 @@ public class DistantFriend extends PathfinderMob {
 	@Override
 	public void aiStep() {
 		if (this.tickCount > 80 && tickCount % 20 == 0) {
-			if (!this.level().getNearbyPlayers(findPlayerCondition, this, this.getBoundingBox().inflate(16.0D, 32.0D, 16.0D)).isEmpty()) {
+			if (!this.level.getNearbyPlayers(findPlayerCondition, this, this.getBoundingBox().inflate(16.0D, 32.0D, 16.0D)).isEmpty()) {
 				for (int i = 0; i < 20; ++i) {
 					double d0 = this.random.nextGaussian() * 0.02D;
 					double d1 = this.random.nextGaussian() * 0.02D;
 					double d2 = this.random.nextGaussian() * 0.02D;
-					this.level().addParticle(ParticleTypes.POOF, this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D), d0, d1, d2);
+					this.level.addParticle(ParticleTypes.POOF, this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D), d0, d1, d2);
 				}
 				this.discard();
 			}
@@ -265,7 +265,7 @@ public class DistantFriend extends PathfinderMob {
 	}
 
 	public static boolean checkFriendSpawn(EntityType<? extends DistantFriend> entityType, ServerLevelAccessor levelAccessor,
-										   MobSpawnType spawnType, BlockPos pos, RandomSource random) {
+	                                       MobSpawnType spawnType, BlockPos pos, RandomSource random) {
 		return levelAccessor.getDifficulty() != Difficulty.PEACEFUL && isDarkEnoughToSpawn(levelAccessor, pos, random) &&
 				checkMobSpawnRules(entityType, levelAccessor, spawnType, pos, random);
 	}

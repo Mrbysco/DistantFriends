@@ -3,7 +3,6 @@ package com.mrbysco.distantfriends.data;
 import com.mrbysco.distantfriends.registration.FriendRegistry;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider;
 import net.minecraft.resources.ResourceLocation;
@@ -15,26 +14,24 @@ import java.util.function.BiConsumer;
 public class DistantDatagen implements DataGeneratorEntrypoint {
 	@Override
 	public void onInitializeDataGenerator(FabricDataGenerator generator) {
-		var pack = generator.createPack();
-
-		pack.addProvider(Loots::new);
-		pack.addProvider(Language::new);
+		generator.addProvider(Loots::new);
+		generator.addProvider(Language::new);
 	}
 
 	private static class Loots extends SimpleFabricLootTableProvider {
-		public Loots(FabricDataOutput dataOutput) {
-			super(dataOutput, LootContextParamSets.ENTITY);
+		public Loots(FabricDataGenerator generator) {
+			super(generator, LootContextParamSets.ENTITY);
 		}
 
 		@Override
-		public void generate(BiConsumer<ResourceLocation, LootTable.Builder> biConsumer) {
+		public void accept(BiConsumer<ResourceLocation, LootTable.Builder> biConsumer) {
 			biConsumer.accept(FriendRegistry.FRIEND.get().getDefaultLootTable(), LootTable.lootTable());
 		}
 	}
 
 	private static class Language extends FabricLanguageProvider {
-		public Language(FabricDataOutput dataOutput) {
-			super(dataOutput);
+		public Language(FabricDataGenerator generator) {
+			super(generator);
 		}
 
 		@Override

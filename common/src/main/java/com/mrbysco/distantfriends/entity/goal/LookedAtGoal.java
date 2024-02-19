@@ -27,7 +27,7 @@ public class LookedAtGoal extends Goal {
 
 	@Override
 	public boolean canUse() {
-		this.player = friend.level().getNearestPlayer(this.lookTargeting, friend);
+		this.player = friend.level.getNearestPlayer(this.lookTargeting, this.friend);
 		return this.player != null;
 	}
 

@@ -2,7 +2,7 @@ package com.mrbysco.distantfriends.registration;
 
 import com.mrbysco.distantfriends.Constants;
 import com.mrbysco.distantfriends.entity.DistantFriend;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 
@@ -11,7 +11,7 @@ public class FriendRegistry {
 	/**
 	 * The provider for EntityTypes
 	 */
-	public static final RegistrationProvider<EntityType<?>> ENTITY_TYPES = RegistrationProvider.get(BuiltInRegistries.ENTITY_TYPE, Constants.MOD_ID);
+	public static final RegistrationProvider<EntityType<?>> ENTITY_TYPES = RegistrationProvider.get(Registry.ENTITY_TYPE, Constants.MOD_ID);
 
 	public static final RegistryObject<EntityType<DistantFriend>> FRIEND = ENTITY_TYPES.register("friend",
 			() -> EntityType.Builder.<DistantFriend>of(DistantFriend::new, MobCategory.AMBIENT)

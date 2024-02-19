@@ -4,7 +4,6 @@ import com.mrbysco.distantfriends.registration.RegistrationProvider;
 import com.mrbysco.distantfriends.registration.RegistryObject;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
@@ -37,7 +36,7 @@ public class FabricRegistrationFactory implements RegistrationProvider.Factory {
 		private Provider(String modId, ResourceKey<? extends Registry<T>> key) {
 			this.modId = modId;
 
-			final var reg = BuiltInRegistries.REGISTRY.get(key.location());
+			final var reg = Registry.REGISTRY.get(key.location());
 			if (reg == null) {
 				throw new RuntimeException("Registry with name " + key.location() + " was not found!");
 			}

@@ -1,8 +1,6 @@
 {
   "pack": {
-    "description": {
-      "text": "Distant Friends resources"
-    },
-    "pack_format": 15
+    "description": "Distant Friends resources",
+    "pack_format": 10
   }
 }
