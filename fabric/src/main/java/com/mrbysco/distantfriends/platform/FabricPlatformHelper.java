@@ -1,11 +1,11 @@
 package com.mrbysco.distantfriends.platform;
 
-import com.mojang.authlib.GameProfile;
 import com.mrbysco.distantfriends.DistantFriendsFabric;
 import com.mrbysco.distantfriends.platform.services.IPlatformHelper;
 import com.mrbysco.distantfriends.util.ServerInstance;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.item.component.ResolvableProfile;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,8 +13,8 @@ import java.util.Optional;
 public class FabricPlatformHelper implements IPlatformHelper {
 
 	@Override
-	public EntityDataSerializer<Optional<GameProfile>> getGameProfileSerializer() {
-		return DistantFriendsFabric.OPTIONAL_GAMEPROFILE;
+	public EntityDataSerializer<Optional<ResolvableProfile>> getResolvableProfileSerializer() {
+		return DistantFriendsFabric.OPTIONAL_RESOLVABLE_PROFILE;
 	}
 
 	@Override

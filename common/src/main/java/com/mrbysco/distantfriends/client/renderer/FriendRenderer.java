@@ -1,6 +1,5 @@
 package com.mrbysco.distantfriends.client.renderer;
 
-import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mrbysco.distantfriends.client.model.FriendModel;
 import com.mrbysco.distantfriends.entity.DistantFriend;
@@ -17,6 +16,7 @@ import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.SkinManager;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.component.ResolvableProfile;
 
 public class FriendRenderer extends MobRenderer<DistantFriend, FriendModel> {
 	private final FriendModel playerModel;
@@ -43,16 +43,16 @@ public class FriendRenderer extends MobRenderer<DistantFriend, FriendModel> {
 	}
 
 	@Override
-	public void render(DistantFriend playerStatue, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int packedLightIn) {
+	public void render(DistantFriend distantFriend, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int packedLightIn) {
 		SkinManager skinmanager = Minecraft.getInstance().getSkinManager();
-		if (playerStatue.getGameProfile().isPresent()) {
-			if (isSlim != skinmanager.getInsecureSkin(playerStatue.getGameProfile().get()).model().id().equals("slim"))
+		if (distantFriend.getProfile().isPresent()) {
+			if (isSlim != skinmanager.getInsecureSkin(distantFriend.getProfile().get().gameProfile()).model().id().equals("slim"))
 				isSlim = !isSlim;
 		}
 
 		this.model = isSlim ? this.slimPlayerModel : playerModel;
 
-		super.render(playerStatue, entityYaw, partialTicks, poseStack, bufferSource, packedLightIn);
+		super.render(distantFriend, entityYaw, partialTicks, poseStack, bufferSource, packedLightIn);
 	}
 
 	protected void scale(DistantFriend friend, PoseStack poseStack, float partialTickTime) {
@@ -62,13 +62,16 @@ public class FriendRenderer extends MobRenderer<DistantFriend, FriendModel> {
 
 	@Override
 	public ResourceLocation getTextureLocation(DistantFriend friend) {
-		return friend.getGameProfile()
+		return friend.getProfile()
 				.map(this::getSkin)
 				.orElse(defaultTexture);
 	}
 
-	private ResourceLocation getSkin(GameProfile gameProfile) {
+	private ResourceLocation getSkin(ResolvableProfile resolvableProfile) {
 		SkinManager skinmanager = Minecraft.getInstance().getSkinManager();
-		return skinmanager.getInsecureSkin(gameProfile).texture();
+		if (resolvableProfile != null)
+			return skinmanager.getInsecureSkin(resolvableProfile.gameProfile()).texture();
+		else
+			return defaultTexture;
 	}
 }

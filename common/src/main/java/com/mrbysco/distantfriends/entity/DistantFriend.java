@@ -1,6 +1,7 @@
 package com.mrbysco.distantfriends.entity;
 
 import com.mojang.authlib.GameProfile;
+import com.mrbysco.distantfriends.Constants;
 import com.mrbysco.distantfriends.FriendNamesCache;
 import com.mrbysco.distantfriends.entity.goal.LookedAtGoal;
 import com.mrbysco.distantfriends.platform.Services;
@@ -9,7 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -35,6 +36,7 @@ import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -46,7 +48,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class DistantFriend extends PathfinderMob {
-	private static final EntityDataAccessor<Optional<GameProfile>> GAMEPROFILE = SynchedEntityData.defineId(DistantFriend.class, Services.PLATFORM.getGameProfileSerializer());
+	private static final EntityDataAccessor<Optional<ResolvableProfile>> RESOLVABLE_PROFILE = SynchedEntityData.defineId(DistantFriend.class, Services.PLATFORM.getResolvableProfileSerializer());
 	private static final EntityDataAccessor<Boolean> DATA_IN_VIEW = SynchedEntityData.defineId(DistantFriend.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> DATA_LOOKED_AT = SynchedEntityData.defineId(DistantFriend.class, EntityDataSerializers.BOOLEAN);
 
@@ -59,19 +61,19 @@ public class DistantFriend extends PathfinderMob {
 	}
 
 	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		this.entityData.define(GAMEPROFILE, Optional.empty());
-		this.entityData.define(DATA_IN_VIEW, false);
-		this.entityData.define(DATA_LOOKED_AT, false);
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		super.defineSynchedData(builder);
+		builder.define(RESOLVABLE_PROFILE, Optional.empty());
+		builder.define(DATA_IN_VIEW, false);
+		builder.define(DATA_LOOKED_AT, false);
 	}
 
-	public Optional<GameProfile> getGameProfile() {
-		return entityData.get(GAMEPROFILE);
+	public Optional<ResolvableProfile> getProfile() {
+		return entityData.get(RESOLVABLE_PROFILE);
 	}
 
-	public void setGameProfile(GameProfile playerProfile) {
-		this.entityData.set(GAMEPROFILE, Optional.ofNullable(playerProfile));
+	public void setProfile(ResolvableProfile profile) {
+		entityData.set(RESOLVABLE_PROFILE, Optional.of(profile));
 	}
 
 	public boolean isLookedAt() {
@@ -108,19 +110,26 @@ public class DistantFriend extends PathfinderMob {
 				.add(Attributes.ATTACK_DAMAGE, 3.0D);
 	}
 
+	@Override
 	public Iterable<ItemStack> getHandSlots() {
 		return this.handItems;
 	}
 
+	@Override
 	public Iterable<ItemStack> getArmorSlots() {
 		return this.armorItems;
 	}
 
+	@Override
 	public ItemStack getItemBySlot(EquipmentSlot slotIn) {
-		return switch (slotIn.getType()) {
-			case HAND -> this.handItems.get(slotIn.getIndex());
-			case ARMOR -> this.armorItems.get(slotIn.getIndex());
-		};
+		switch (slotIn.getType()) {
+			case HAND:
+				return this.handItems.get(slotIn.getIndex());
+			case ARMOR:
+				return this.armorItems.get(slotIn.getIndex());
+			default:
+				return ItemStack.EMPTY;
+		}
 	}
 
 	@Override
@@ -173,9 +182,9 @@ public class DistantFriend extends PathfinderMob {
 		super.addAdditionalSaveData(tag);
 		tag.putBoolean("inView", isInView());
 		tag.putBoolean("lookedAt", isLookedAt());
-		tag.putBoolean("gameProfileExists", entityData.get(GAMEPROFILE).isPresent());
-		if (getGameProfile().isPresent()) {
-			tag.put("gameProfile", NbtUtils.writeGameProfile(new CompoundTag(), entityData.get(GAMEPROFILE).get()));
+		tag.putBoolean("profileExists", entityData.get(RESOLVABLE_PROFILE).isPresent());
+		if (getProfile().isPresent()) {
+			tag.put("profile", ResolvableProfile.CODEC.encodeStart(NbtOps.INSTANCE, entityData.get(RESOLVABLE_PROFILE).get()).getOrThrow());
 		}
 	}
 
@@ -184,14 +193,20 @@ public class DistantFriend extends PathfinderMob {
 		super.load(compound);
 		setInView(compound.getBoolean("inView"));
 		setLookedAt(compound.getBoolean("lookedAt"));
-		entityData.set(GAMEPROFILE, !compound.getBoolean("gameProfileExists") ? Optional.empty() :
-				Optional.ofNullable(NbtUtils.readGameProfile(compound.getCompound("gameProfile"))));
+		boolean profileExists = compound.getBoolean("profileExists");
+		if (profileExists) {
+			entityData.set(RESOLVABLE_PROFILE, ResolvableProfile.CODEC
+					.parse(NbtOps.INSTANCE, compound.get("profile"))
+					.resultOrPartial(error -> Constants.LOGGER.error("Failed to load profile from Distant Friend: {}", error)));
+		} else {
+			entityData.set(RESOLVABLE_PROFILE, Optional.empty());
+		}
 	}
 
 	@Nullable
 	@Override
-	public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
-		SpawnGroupData data = super.finalizeSpawn(level, difficultyIn, reason, spawnDataIn, dataTag);
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
+		spawnDataIn = super.finalizeSpawn(level, difficultyIn, reason, spawnDataIn);
 
 		List<String> friends = FriendNamesCache.nameList;
 		if (!friends.isEmpty()) {
@@ -199,12 +214,14 @@ public class DistantFriend extends PathfinderMob {
 //			DistantFriends.LOGGER.info("Spawned Distant friend with name {}", name);
 			SkullBlockEntity.fetchGameProfile(name)
 					.thenAccept(
-							profile -> this.setGameProfile(profile.orElse(new GameProfile(Util.NIL_UUID, name)))
+							profile -> {
+								this.setProfile(new ResolvableProfile(profile.orElse(new GameProfile(Util.NIL_UUID, name))));
+								this.setCustomName(Component.literal(name));
+							}
 					);
-			this.getGameProfile().ifPresent(profile -> setCustomName(Component.literal(profile.getName())));
 		}
 
-		return data;
+		return spawnDataIn;
 	}
 
 
@@ -218,7 +235,7 @@ public class DistantFriend extends PathfinderMob {
 	}
 
 	public static boolean checkFriendSpawn(EntityType<? extends DistantFriend> entityType, ServerLevelAccessor levelAccessor,
-										   MobSpawnType spawnType, BlockPos pos, RandomSource random) {
+	                                       MobSpawnType spawnType, BlockPos pos, RandomSource random) {
 		return levelAccessor.getDifficulty() != Difficulty.PEACEFUL && isDarkEnoughToSpawn(levelAccessor, pos, random) &&
 				checkMobSpawnRules(entityType, levelAccessor, spawnType, pos, random);
 	}

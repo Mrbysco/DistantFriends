@@ -1,8 +1,8 @@
 package com.mrbysco.distantfriends.platform.services;
 
-import com.mojang.authlib.GameProfile;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.item.component.ResolvableProfile;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,10 +10,10 @@ import java.util.Optional;
 public interface IPlatformHelper {
 
 	/**
-	 * Gets the Game Profile Serializer
-	 * @return The Game Profile Serializer
+	 * Gets the Resolvable Profile Serializer
+	 * @return The Resolvable Profile Serializer
 	 */
-	EntityDataSerializer<Optional<GameProfile>> getGameProfileSerializer();
+	EntityDataSerializer<Optional<ResolvableProfile>> getResolvableProfileSerializer();
 
 	/**
 	 * Get configured friends

@@ -31,6 +31,7 @@ public class LookedAtGoal extends Goal {
 		return this.player != null;
 	}
 
+	@Override
 	public boolean canContinueToUse() {
 		if (this.player != null && !this.player.isAlive()) {
 			return false;

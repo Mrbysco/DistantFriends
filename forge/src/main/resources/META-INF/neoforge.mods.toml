@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[2,)"
+loaderVersion="[3,)"
 issueTrackerURL="https://github.com/Mrbysco/DistantFriends/issues"
 license="MIT"
 
@@ -15,6 +15,12 @@ Don't mind them, they just like looking at you
 [[dependencies.distantfriends]]
 modId="minecraft"
 type="REQUIRED"
-versionRange="[1.20.4,1.21)"
+versionRange="[1.20.6,1.21)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.distantfriends]]
+modId="neoforge"
+type="required"
+versionRange="[20.6.78-beta,)"
 ordering="NONE"
 side="BOTH"

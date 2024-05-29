@@ -5,8 +5,10 @@ import com.mrbysco.distantfriends.registration.FriendRegistry;
 import com.mrbysco.distantfriends.registration.RegistryObject;
 import net.minecraft.core.Cloner;
 import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.core.WritableRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
@@ -17,6 +19,7 @@ import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.biome.Biome;
@@ -25,7 +28,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import net.neoforged.neoforge.common.world.BiomeModifier;
@@ -39,7 +42,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public class DistantDatagen {
 
 	@SubscribeEvent
@@ -48,7 +51,7 @@ public class DistantDatagen {
 		PackOutput packOutput = generator.getPackOutput();
 
 		if (event.includeServer()) {
-			generator.addProvider(true, new Loots(packOutput));
+			generator.addProvider(true, new Loots(packOutput, event.getLookupProvider()));
 
 			generator.addProvider(event.includeServer(), new DatapackBuiltinEntriesProvider(
 					packOutput, CompletableFuture.supplyAsync(DistantDatagen::getProvider), Set.of(Constants.MOD_ID)));
@@ -82,10 +85,10 @@ public class DistantDatagen {
 	}
 
 	private static class Loots extends LootTableProvider {
-		public Loots(PackOutput packOutput) {
+		public Loots(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
 			super(packOutput, Set.of(), List.of(
 					new SubProviderEntry(FriendLootProvider::new, LootContextParamSets.ENTITY)
-			));
+			), lookupProvider);
 		}
 
 		public static class FriendLootProvider extends EntityLootSubProvider {
@@ -105,8 +108,8 @@ public class DistantDatagen {
 		}
 
 		@Override
-		protected void validate(Map<ResourceLocation, LootTable> map, ValidationContext validationContext) {
-			map.forEach((name, table) -> table.validate(validationContext));
+		protected void validate(WritableRegistry<LootTable> writableregistry, ValidationContext validationcontext, ProblemReporter.Collector problemreporter$collector) {
+			super.validate(writableregistry, validationcontext, problemreporter$collector);
 		}
 	}
 
