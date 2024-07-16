@@ -37,7 +37,6 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
@@ -81,7 +80,7 @@ public class DistantDatagen {
 	}
 
 	private static ResourceKey<BiomeModifier> createKey(String name) {
-		return ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, new ResourceLocation(Constants.MOD_ID, name));
+		return ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, name));
 	}
 
 	private static class Loots extends LootTableProvider {
@@ -92,8 +91,8 @@ public class DistantDatagen {
 		}
 
 		public static class FriendLootProvider extends EntityLootSubProvider {
-			protected FriendLootProvider() {
-				super(FeatureFlags.REGISTRY.allFlags());
+			protected FriendLootProvider(HolderLookup.Provider provider) {
+				super(FeatureFlags.REGISTRY.allFlags(), provider);
 			}
 
 			@Override

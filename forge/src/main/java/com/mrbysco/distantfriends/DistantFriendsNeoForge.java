@@ -13,7 +13,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
-import net.neoforged.neoforge.event.entity.SpawnPlacementRegisterEvent;
+import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 
 @Mod(Constants.MOD_ID)
 public class DistantFriendsNeoForge {
@@ -33,8 +33,9 @@ public class DistantFriendsNeoForge {
 		}
 	}
 
-	public void setupEntities(SpawnPlacementRegisterEvent event) {
-		event.register(FriendRegistry.FRIEND.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DistantFriend::checkFriendSpawn, SpawnPlacementRegisterEvent.Operation.AND);
+	public void setupEntities(RegisterSpawnPlacementsEvent event) {
+		event.register(FriendRegistry.FRIEND.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+				DistantFriend::checkFriendSpawn, RegisterSpawnPlacementsEvent.Operation.AND);
 	}
 
 	public void registerEntityAttributes(EntityAttributeCreationEvent event) {

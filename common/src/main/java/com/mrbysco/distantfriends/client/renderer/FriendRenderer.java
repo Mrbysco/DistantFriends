@@ -34,8 +34,8 @@ public class FriendRenderer extends MobRenderer<DistantFriend, FriendModel> {
 		this.slimPlayerModel = new FriendModel(context.bakeLayer(ModelLayers.PLAYER_SLIM), true);
 
 		this.addLayer(new HumanoidArmorLayer<>(this,
-				new HumanoidModel(context.bakeLayer(slim ? ModelLayers.PLAYER_SLIM_INNER_ARMOR : ModelLayers.PLAYER_INNER_ARMOR)),
-				new HumanoidModel(context.bakeLayer(slim ? ModelLayers.PLAYER_SLIM_OUTER_ARMOR : ModelLayers.PLAYER_OUTER_ARMOR)),
+				new HumanoidModel<>(context.bakeLayer(slim ? ModelLayers.PLAYER_SLIM_INNER_ARMOR : ModelLayers.PLAYER_INNER_ARMOR)),
+				new HumanoidModel<>(context.bakeLayer(slim ? ModelLayers.PLAYER_SLIM_OUTER_ARMOR : ModelLayers.PLAYER_OUTER_ARMOR)),
 				context.getModelManager()));
 		this.addLayer(new ItemInHandLayer<>(this, context.getItemInHandRenderer()));
 		this.addLayer(new ElytraLayer<>(this, context.getModelSet()));

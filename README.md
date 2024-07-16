@@ -7,7 +7,7 @@ They just like staring at you, is that so wrong?
 
 ## License ##
 * Distant Friends is licensed under the MIT License
-  - (c) 2023 Mrbysco
+  - (c) 2024 Mrbysco
   - [![License](https://img.shields.io/badge/License-MIT-red.svg?style=flat)](http://opensource.org/licenses/MIT)
 
 ## Downloads ##

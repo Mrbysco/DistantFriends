@@ -122,14 +122,11 @@ public class DistantFriend extends PathfinderMob {
 
 	@Override
 	public ItemStack getItemBySlot(EquipmentSlot slotIn) {
-		switch (slotIn.getType()) {
-			case HAND:
-				return this.handItems.get(slotIn.getIndex());
-			case ARMOR:
-				return this.armorItems.get(slotIn.getIndex());
-			default:
-				return ItemStack.EMPTY;
-		}
+		return switch (slotIn.getType()) {
+			case HAND -> this.handItems.get(slotIn.getIndex());
+			case HUMANOID_ARMOR -> this.armorItems.get(slotIn.getIndex());
+			default -> ItemStack.EMPTY;
+		};
 	}
 
 	@Override
@@ -137,7 +134,7 @@ public class DistantFriend extends PathfinderMob {
 		this.verifyEquippedItem(stack);
 		switch (equipmentSlot.getType()) {
 			case HAND -> this.onEquipItem(equipmentSlot, this.handItems.set(equipmentSlot.getIndex(), stack), stack);
-			case ARMOR -> this.onEquipItem(equipmentSlot, this.armorItems.set(equipmentSlot.getIndex(), stack), stack);
+			case HUMANOID_ARMOR -> this.onEquipItem(equipmentSlot, this.armorItems.set(equipmentSlot.getIndex(), stack), stack);
 		}
 	}
 
