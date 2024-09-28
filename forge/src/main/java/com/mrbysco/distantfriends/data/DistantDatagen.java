@@ -35,6 +35,7 @@ import net.neoforged.neoforge.common.world.BiomeModifier;
 import net.neoforged.neoforge.common.world.BiomeModifiers;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -120,6 +121,29 @@ public class DistantDatagen {
 		@Override
 		protected void addTranslations() {
 			this.addEntityType(FriendRegistry.FRIEND, "Distant Friend");
+
+			addConfig("title", "Distant Friends Config", null);
+
+			addConfig("friend_settings", "Friends", "Friend Settings");
+			addConfig("friends", "Friends", "A list of users who can be chosen when it spawns a distant friend");
+			addConfig("addWhitelistPlayers", "Add Whitelist Players", "Add the players from the whitelist to the Friends list [default: true]");
+
+			addConfig("compat_settings", "Compat", "Compat Settings");
+			addConfig("playerMobsCompat", "Player Mobs Compat", "Add players from a Player Mobs whitelist to the Friends list [default: false]");
+			addConfig("playerMobsNameLinks", "Player Mobs Name Links", "The player mobs Name Links");
+		}
+
+		/**
+		 * Add the translation for a config entry
+		 *
+		 * @param path        The path of the config entry
+		 * @param name        The name of the config entry
+		 * @param description The description of the config entry (optional in case of targeting "title" or similar entries that have no tooltip)
+		 */
+		private void addConfig(String path, String name, @Nullable String description) {
+			this.add(Constants.MOD_ID + ".configuration." + path, name);
+			if (description != null && !description.isEmpty())
+				this.add(Constants.MOD_ID + ".configuration." + path + ".tooltip", description);
 		}
 	}
 }

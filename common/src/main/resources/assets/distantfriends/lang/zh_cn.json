@@ -6,5 +6,18 @@
   "text.autoconfig.distantfriends.option.general": "General",
   "text.autoconfig.distantfriends.option.general.addWhitelistPlayers": "Add Whitelist Players",
   "text.autoconfig.distantfriends.option.general.friends": "Friends",
-  "text.autoconfig.distantfriends.title": "Distant Friends"
+  "text.autoconfig.distantfriends.title": "Distant Friends",
+  "distantfriends.configuration.addWhitelistPlayers": "Add Whitelist Players",
+  "distantfriends.configuration.addWhitelistPlayers.tooltip": "Add the players from the whitelist to the Friends list [default: true]",
+  "distantfriends.configuration.compat_settings": "Compat",
+  "distantfriends.configuration.compat_settings.tooltip": "Compat Settings",
+  "distantfriends.configuration.friend_settings": "Friends",
+  "distantfriends.configuration.friend_settings.tooltip": "Friend Settings",
+  "distantfriends.configuration.friends": "Friends",
+  "distantfriends.configuration.friends.tooltip": "A list of users who can be chosen when it spawns a distant friend",
+  "distantfriends.configuration.playerMobsCompat": "Player Mobs Compat",
+  "distantfriends.configuration.playerMobsCompat.tooltip": "Add players from a Player Mobs whitelist to the Friends list [default: false]",
+  "distantfriends.configuration.playerMobsNameLinks": "Player Mobs Name Links",
+  "distantfriends.configuration.playerMobsNameLinks.tooltip": "The player mobs Name Links",
+  "distantfriends.configuration.title": "Distant Friends Config"
 }

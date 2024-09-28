@@ -22,11 +22,11 @@ public class FriendConfigForge {
 
 		Common(ModConfigSpec.Builder builder) {
 			builder.comment("Friends")
-					.push("friends");
+					.push("friend_settings");
 
 			friends = builder
 					.comment("A list of users who can be chosen when it spawns a distant friend")
-					.defineList("friends", List.of("darkosto"), o -> (o instanceof String));
+					.defineListAllowEmpty("friends", List.of("darkosto"), () -> "", o -> (o instanceof String));
 			addWhitelistPlayers = builder
 					.comment("Add the players from the whitelist to the Friends list [default: true]")
 					.define("addWhitelistPlayers", true);
@@ -34,14 +34,14 @@ public class FriendConfigForge {
 			builder.pop();
 
 			builder.comment("Compat")
-					.push("compat");
+					.push("compat_settings");
 
 			playerMobsCompat = builder
 					.comment("Add players from a Player Mobs whitelist to the Friends list [default: false]")
 					.define("playerMobsCompat", false);
 			playerMobsNameLinks = builder
-					.comment("The player mobs Name Links")
-					.defineListAllowEmpty(List.of("playerMobsWhitelist"), () -> List.of(""), o ->
+					.comment("The player mobs Name Links, must start with https://whitelist.gorymoon.se")
+					.defineListAllowEmpty(List.of("playerMobsNameLinks"), List.of(), () -> "", o ->
 							(o instanceof String string && string.startsWith("https://whitelist.gorymoon.se")));
 
 			builder.pop();
