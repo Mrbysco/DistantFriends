@@ -1,1 +1,2 @@
-* Initial update to 1.21
+* Fix the spawn category on Fabric
+* Fix config validation on NeoForge (**This update will reset your config!**)
