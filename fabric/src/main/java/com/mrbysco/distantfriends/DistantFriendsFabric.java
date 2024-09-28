@@ -77,6 +77,6 @@ public class DistantFriendsFabric implements ModInitializer {
 
 	public static void addFriendSpawn() {
 		Predicate<BiomeSelectionContext> overworld = (ctx -> ctx.hasTag(BiomeTags.IS_OVERWORLD));
-		BiomeModifications.addSpawn(overworld, MobCategory.CREATURE, FriendRegistry.FRIEND.get(), 20, 1, 2);
+		BiomeModifications.addSpawn(overworld, MobCategory.AMBIENT, FriendRegistry.FRIEND.get(), 20, 1, 2);
 	}
 }
