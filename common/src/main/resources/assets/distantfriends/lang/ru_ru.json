@@ -1,0 +1,23 @@
+{
+  "distantfriends.configuration.addWhitelistPlayers.tooltip": "Добавлять игроков из белого списка в список друзей [по умолчанию: true]",
+  "distantfriends.configuration.addWhitelistPlayers": "Добавить игроков в белый список",
+  "distantfriends.configuration.compat_settings.tooltip": "Настройки совместимости",
+  "distantfriends.configuration.compat_settings": "Совместимость",
+  "distantfriends.configuration.friend_settings.tooltip": "Настройки друзей",
+  "distantfriends.configuration.friend_settings": "Друзья",
+  "distantfriends.configuration.friends.tooltip": "Список пользователей, которые могут быть выбраны при появлении далёкого друга",
+  "distantfriends.configuration.friends": "Друзья",
+  "distantfriends.configuration.playerMobsCompat.tooltip": "Добавлять игроков из белого списка мобов-игроков в список друзей [по умолчанию: false]",
+  "distantfriends.configuration.playerMobsCompat": "Совместимость мобов-игроков",
+  "distantfriends.configuration.playerMobsNameLinks.tooltip": "Ссылки на имена мобов-игроков",
+  "distantfriends.configuration.playerMobsNameLinks": "Ссылки на имена мобов-игроков",
+  "distantfriends.configuration.title": "Настройки далёких друзей",
+  "entity.distantfriends.friend": "Далёкий друг",
+  "text.autoconfig.distantfriends.option.compat.playerMobsCompat": "Совместимость мобов-игроков",
+  "text.autoconfig.distantfriends.option.compat.playerMobsWhitelist": "Белый список мобов-игроков",
+  "text.autoconfig.distantfriends.option.compat": "Совместимость",
+  "text.autoconfig.distantfriends.option.general.addWhitelistPlayers": "Добавить игроков в белый список",
+  "text.autoconfig.distantfriends.option.general.friends": "Друзья",
+  "text.autoconfig.distantfriends.option.general": "Общие",
+  "text.autoconfig.distantfriends.title": "Далёкие друзья"
+}
