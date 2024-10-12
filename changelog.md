@@ -1,2 +1,1 @@
-* Fix the spawn category on Fabric
-* Fix config validation on NeoForge (**This update will reset your config!**)
+* Add `ru_ru` translation (Courtesy of [mpustovoi](https://github.com/Mrbysco/DistantFriends/pull/13))
