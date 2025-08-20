@@ -1,1 +1,1 @@
-* Add `ru_ru` translation (Courtesy of [mpustovoi](https://github.com/Mrbysco/DistantFriends/pull/13))
+* Allow supplying base64 textures with the player names in the config overriding the original skin. The format is `"username,BASE64"`
