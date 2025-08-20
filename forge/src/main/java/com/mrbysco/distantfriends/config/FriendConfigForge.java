@@ -1,7 +1,7 @@
 package com.mrbysco.distantfriends.config;
 
 import com.mrbysco.distantfriends.Constants;
-import com.mrbysco.distantfriends.FriendNamesCache;
+import com.mrbysco.distantfriends.util.FriendNamesCache;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;

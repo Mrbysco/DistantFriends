@@ -1,5 +1,6 @@
-package com.mrbysco.distantfriends;
+package com.mrbysco.distantfriends.util;
 
+import com.mrbysco.distantfriends.Constants;
 import com.mrbysco.distantfriends.platform.Services;
 import net.minecraft.server.players.UserWhiteList;
 
@@ -15,6 +16,7 @@ public class FriendNamesCache {
 
 	public static final List<PlayerData> nameList = new ArrayList<>();
 
+	@SuppressWarnings("deprecation")
 	public static void refreshCache() {
 		Constants.LOGGER.info("Refreshing friends cache");
 
@@ -40,7 +42,7 @@ public class FriendNamesCache {
 						}
 					}
 				} catch (IOException e) {
-					Constants.LOGGER.error(String.format("Error fetching names from %s", link), e);
+					Constants.LOGGER.error("Error fetching names from {}", link, e);
 				}
 			}
 		}

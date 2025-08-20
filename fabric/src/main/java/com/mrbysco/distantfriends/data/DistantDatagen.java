@@ -30,7 +30,7 @@ public class DistantDatagen implements DataGeneratorEntrypoint {
 
 		@Override
 		public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> biConsumer) {
-			biConsumer.accept(FriendRegistry.FRIEND.get().getDefaultLootTable(), LootTable.lootTable());
+			biConsumer.accept(FriendRegistry.FRIEND.get().getDefaultLootTable().get(), LootTable.lootTable());
 		}
 	}
 

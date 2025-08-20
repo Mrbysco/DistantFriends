@@ -1,4 +1,4 @@
-package com.mrbysco.distantfriends;
+package com.mrbysco.distantfriends.util;
 
 import org.jetbrains.annotations.Nullable;
 

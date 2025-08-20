@@ -3,6 +3,7 @@ package com.mrbysco.distantfriends;
 import com.mrbysco.distantfriends.config.FriendConfigFabric;
 import com.mrbysco.distantfriends.entity.DistantFriend;
 import com.mrbysco.distantfriends.registration.FriendRegistry;
+import com.mrbysco.distantfriends.util.FriendNamesCache;
 import com.mrbysco.distantfriends.util.ServerInstance;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;

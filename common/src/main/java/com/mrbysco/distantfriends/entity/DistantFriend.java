@@ -1,31 +1,33 @@
 package com.mrbysco.distantfriends.entity;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import com.mrbysco.distantfriends.Constants;
-import com.mrbysco.distantfriends.FriendNamesCache;
-import com.mrbysco.distantfriends.PlayerData;
 import com.mrbysco.distantfriends.entity.goal.LookedAtGoal;
 import com.mrbysco.distantfriends.platform.Services;
+import com.mrbysco.distantfriends.util.FriendNamesCache;
+import com.mrbysco.distantfriends.util.PlayerData;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundEntityEventPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -45,7 +47,6 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import com.mojang.authlib.properties.Property;
 
 import java.util.List;
 import java.util.Optional;
@@ -137,7 +138,8 @@ public class DistantFriend extends PathfinderMob {
 		this.verifyEquippedItem(stack);
 		switch (equipmentSlot.getType()) {
 			case HAND -> this.onEquipItem(equipmentSlot, this.handItems.set(equipmentSlot.getIndex(), stack), stack);
-			case HUMANOID_ARMOR -> this.onEquipItem(equipmentSlot, this.armorItems.set(equipmentSlot.getIndex(), stack), stack);
+			case HUMANOID_ARMOR ->
+					this.onEquipItem(equipmentSlot, this.armorItems.set(equipmentSlot.getIndex(), stack), stack);
 		}
 	}
 
@@ -155,26 +157,22 @@ public class DistantFriend extends PathfinderMob {
 	}
 
 	@Override
-	public boolean hurt(DamageSource source, float amount) {
+	public boolean hurtServer(ServerLevel serverLevel, DamageSource source, float amount) {
 		this.discard();
-		return super.hurt(source, amount);
+		return super.hurtServer(serverLevel, source, amount);
 	}
 
 	@Override
-	public void aiStep() {
-		if (this.tickCount > 80 && tickCount % 20 == 0) {
-			if (!this.level().getNearbyPlayers(findPlayerCondition, this, this.getBoundingBox().inflate(16.0D, 32.0D, 16.0D)).isEmpty()) {
-				for (int i = 0; i < 20; ++i) {
-					double d0 = this.random.nextGaussian() * 0.02D;
-					double d1 = this.random.nextGaussian() * 0.02D;
-					double d2 = this.random.nextGaussian() * 0.02D;
-					this.level().addParticle(ParticleTypes.POOF, this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D), d0, d1, d2);
-				}
+	protected void customServerAiStep(ServerLevel level) {
+		if (this.tickCount > 80 && tickCount % 20 == 0 && this.isAlive()) {
+			if (!level.getNearbyPlayers(findPlayerCondition, this, this.getBoundingBox().inflate(16.0D, 32.0D, 16.0D)).isEmpty()) {
+				// Send entity event 60 (which spawns poof particles)
+				level.getChunkSource().broadcast(this, new ClientboundEntityEventPacket(this, (byte) 60));
 				this.discard();
 			}
 		}
 
-		super.aiStep();
+		super.customServerAiStep(level);
 	}
 
 	@Override
@@ -189,14 +187,14 @@ public class DistantFriend extends PathfinderMob {
 	}
 
 	@Override
-	public void load(CompoundTag compound) {
-		super.load(compound);
-		setInView(compound.getBoolean("inView"));
-		setLookedAt(compound.getBoolean("lookedAt"));
-		boolean profileExists = compound.getBoolean("profileExists");
+	public void load(CompoundTag tag) {
+		super.load(tag);
+		setInView(tag.getBoolean("inView"));
+		setLookedAt(tag.getBoolean("lookedAt"));
+		boolean profileExists = tag.getBoolean("profileExists");
 		if (profileExists) {
 			entityData.set(RESOLVABLE_PROFILE, ResolvableProfile.CODEC
-					.parse(NbtOps.INSTANCE, compound.get("profile"))
+					.parse(NbtOps.INSTANCE, tag.get("profile"))
 					.resultOrPartial(error -> Constants.LOGGER.error("Failed to load profile from Distant Friend: {}", error)));
 		} else {
 			entityData.set(RESOLVABLE_PROFILE, Optional.empty());
@@ -205,7 +203,7 @@ public class DistantFriend extends PathfinderMob {
 
 	@Nullable
 	@Override
-	public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficultyIn, EntitySpawnReason reason, @Nullable SpawnGroupData spawnDataIn) {
 		spawnDataIn = super.finalizeSpawn(level, difficultyIn, reason, spawnDataIn);
 
 		List<PlayerData> friends = FriendNamesCache.nameList;
@@ -244,7 +242,7 @@ public class DistantFriend extends PathfinderMob {
 	}
 
 	public static boolean checkFriendSpawn(EntityType<? extends DistantFriend> entityType, ServerLevelAccessor levelAccessor,
-	                                       MobSpawnType spawnType, BlockPos pos, RandomSource random) {
+	                                       EntitySpawnReason spawnType, BlockPos pos, RandomSource random) {
 		return levelAccessor.getDifficulty() != Difficulty.PEACEFUL && isDarkEnoughToSpawn(levelAccessor, pos, random) &&
 				checkMobSpawnRules(entityType, levelAccessor, spawnType, pos, random);
 	}

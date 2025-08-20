@@ -51,7 +51,7 @@ neoForge {
             programArgument '--nogui'
         }
         data {
-            data()
+            clientData()
             programArguments.addAll(
                     '--mod', "${mod_id}",
                     '--all',

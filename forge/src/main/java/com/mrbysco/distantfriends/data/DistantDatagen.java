@@ -3,21 +3,16 @@ package com.mrbysco.distantfriends.data;
 import com.mrbysco.distantfriends.Constants;
 import com.mrbysco.distantfriends.registration.FriendRegistry;
 import com.mrbysco.distantfriends.registration.RegistryObject;
-import net.minecraft.core.Cloner;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.WritableRegistry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
-import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.EntityType;
@@ -46,42 +41,38 @@ import java.util.stream.Stream;
 public class DistantDatagen {
 
 	@SubscribeEvent
-	public static void gatherData(GatherDataEvent event) {
+	public static void gatherData(GatherDataEvent.Client event) {
 		DataGenerator generator = event.getGenerator();
 		PackOutput packOutput = generator.getPackOutput();
+		CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
-		if (event.includeServer()) {
-			generator.addProvider(true, new Loots(packOutput, event.getLookupProvider()));
+		generator.addProvider(true, new Loots(packOutput, lookupProvider));
 
-			generator.addProvider(event.includeServer(), new DatapackBuiltinEntriesProvider(
-					packOutput, CompletableFuture.supplyAsync(DistantDatagen::getProvider), Set.of(Constants.MOD_ID)));
-		}
-		if (event.includeClient()) {
-			generator.addProvider(true, new Language(packOutput));
-		}
+		generator.addProvider(true, new Datapack(
+				packOutput, lookupProvider, Set.of(Constants.MOD_ID)));
+
+		generator.addProvider(true, new Language(packOutput));
+
 	}
 
-	private static RegistrySetBuilder.PatchedRegistries getProvider() {
-		final RegistrySetBuilder registryBuilder = new RegistrySetBuilder();
-		registryBuilder.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, context -> {
-			final HolderGetter<Biome> biomeHolderGetter = context.lookup(Registries.BIOME);
-			final BiomeModifier addSpawn = BiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(
-					biomeHolderGetter.getOrThrow(BiomeTags.IS_OVERWORLD),
-					new MobSpawnSettings.SpawnerData(FriendRegistry.FRIEND.get(), 20, 1, 2));
+	private static class Datapack extends DatapackBuiltinEntriesProvider {
+		public static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
+				.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, context -> {
+					final HolderGetter<Biome> biomeHolderGetter = context.lookup(Registries.BIOME);
+					final BiomeModifier addSpawn = BiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(
+							biomeHolderGetter.getOrThrow(BiomeTags.IS_OVERWORLD),
+							new MobSpawnSettings.SpawnerData(FriendRegistry.FRIEND.get(), 20, 1, 2));
 
-			context.register(createKey("add_distant_friend"), addSpawn);
-		});
-		// We need the BIOME registry to be present, so we can use a biome tag, doesn't matter that it's empty
-		registryBuilder.add(Registries.BIOME, $ -> {
-		});
-		RegistryAccess.Frozen regAccess = RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY);
-		Cloner.Factory cloner$factory = new Cloner.Factory();
-		net.neoforged.neoforge.registries.DataPackRegistriesHooks.getDataPackRegistriesWithDimensions().forEach(data -> data.runWithArguments(cloner$factory::addCodec));
-		return registryBuilder.buildPatch(regAccess, VanillaRegistries.createLookup(), cloner$factory);
+					context.register(createKey("add_distant_friend"), addSpawn);
+				});
+
+		public Datapack(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, Set<String> modIds) {
+			super(output, registries, BUILDER, modIds);
+		}
 	}
 
 	private static ResourceKey<BiomeModifier> createKey(String name) {
-		return ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, name));
+		return ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, Constants.modLoc(name));
 	}
 
 	private static class Loots extends LootTableProvider {
@@ -108,8 +99,8 @@ public class DistantDatagen {
 		}
 
 		@Override
-		protected void validate(WritableRegistry<LootTable> writableregistry, ValidationContext validationcontext, ProblemReporter.Collector problemreporter$collector) {
-			super.validate(writableregistry, validationcontext, problemreporter$collector);
+		protected void validate(WritableRegistry<LootTable> writableRegistry, ValidationContext validationContext, ProblemReporter.Collector problemReporter) {
+			super.validate(writableRegistry, validationContext, problemReporter);
 		}
 	}
 
