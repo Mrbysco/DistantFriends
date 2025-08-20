@@ -15,6 +15,7 @@ import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.ProblemReporter;
+import net.minecraft.util.random.Weighted;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.biome.Biome;
@@ -61,7 +62,7 @@ public class DistantDatagen {
 					final HolderGetter<Biome> biomeHolderGetter = context.lookup(Registries.BIOME);
 					final BiomeModifier addSpawn = BiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(
 							biomeHolderGetter.getOrThrow(BiomeTags.IS_OVERWORLD),
-							new MobSpawnSettings.SpawnerData(FriendRegistry.FRIEND.get(), 20, 1, 2));
+							new Weighted<>(new MobSpawnSettings.SpawnerData(FriendRegistry.FRIEND.get(), 1, 2), 20));
 
 					context.register(createKey("add_distant_friend"), addSpawn);
 				});

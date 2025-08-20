@@ -13,9 +13,9 @@ import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricTrackedDataRegistry;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.syncher.EntityDataSerializer;
-import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.MobCategory;
@@ -45,7 +45,7 @@ public class DistantFriendsFabric implements ModInitializer {
 			return InteractionResult.SUCCESS;
 		});
 
-		EntityDataSerializers.registerSerializer(OPTIONAL_RESOLVABLE_PROFILE);
+		FabricTrackedDataRegistry.register(Constants.modLoc("optional_resolvable_profile"), OPTIONAL_RESOLVABLE_PROFILE);
 		CommonClass.init();
 
 		addFriendSpawn();

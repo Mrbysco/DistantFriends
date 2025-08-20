@@ -56,8 +56,6 @@ public class DistantFriend extends PathfinderMob {
 	private static final EntityDataAccessor<Boolean> DATA_IN_VIEW = SynchedEntityData.defineId(DistantFriend.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> DATA_LOOKED_AT = SynchedEntityData.defineId(DistantFriend.class, EntityDataSerializers.BOOLEAN);
 
-	private final NonNullList<ItemStack> handItems = NonNullList.withSize(2, ItemStack.EMPTY);
-	private final NonNullList<ItemStack> armorItems = NonNullList.withSize(4, ItemStack.EMPTY);
 	private final TargetingConditions findPlayerCondition = TargetingConditions.forNonCombat().range(16.0D);
 
 	public DistantFriend(EntityType<? extends PathfinderMob> entityType, Level level) {
@@ -115,32 +113,8 @@ public class DistantFriend extends PathfinderMob {
 	}
 
 	@Override
-	public Iterable<ItemStack> getHandSlots() {
-		return this.handItems;
-	}
-
-	@Override
-	public Iterable<ItemStack> getArmorSlots() {
-		return this.armorItems;
-	}
-
-	@Override
-	public ItemStack getItemBySlot(EquipmentSlot slotIn) {
-		return switch (slotIn.getType()) {
-			case HAND -> this.handItems.get(slotIn.getIndex());
-			case HUMANOID_ARMOR -> this.armorItems.get(slotIn.getIndex());
-			default -> ItemStack.EMPTY;
-		};
-	}
-
-	@Override
 	public void setItemSlot(EquipmentSlot equipmentSlot, ItemStack stack) {
-		this.verifyEquippedItem(stack);
-		switch (equipmentSlot.getType()) {
-			case HAND -> this.onEquipItem(equipmentSlot, this.handItems.set(equipmentSlot.getIndex(), stack), stack);
-			case HUMANOID_ARMOR ->
-					this.onEquipItem(equipmentSlot, this.armorItems.set(equipmentSlot.getIndex(), stack), stack);
-		}
+		this.onEquipItem(equipmentSlot, this.equipment.set(equipmentSlot, stack), stack);
 	}
 
 	@Override
@@ -189,9 +163,9 @@ public class DistantFriend extends PathfinderMob {
 	@Override
 	public void load(CompoundTag tag) {
 		super.load(tag);
-		setInView(tag.getBoolean("inView"));
-		setLookedAt(tag.getBoolean("lookedAt"));
-		boolean profileExists = tag.getBoolean("profileExists");
+		setInView(tag.getBooleanOr("inView", false));
+		setLookedAt(tag.getBooleanOr("lookedAt", false));
+		boolean profileExists = tag.getBooleanOr("profileExists", false);
 		if (profileExists) {
 			entityData.set(RESOLVABLE_PROFILE, ResolvableProfile.CODEC
 					.parse(NbtOps.INSTANCE, tag.get("profile"))
