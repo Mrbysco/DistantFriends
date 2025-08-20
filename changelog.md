@@ -1,1 +1,1 @@
-* Allow supplying base64 textures with the player names in the config overriding the original skin. The format is `"username,BASE64"`
+* Update to 1.21.4
