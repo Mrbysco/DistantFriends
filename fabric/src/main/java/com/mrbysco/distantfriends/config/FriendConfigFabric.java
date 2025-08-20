@@ -19,8 +19,9 @@ public class FriendConfigFabric implements ConfigData {
 
 	public static class General {
 
-		@Comment("A list of users who can be chosen when it spawns a distant friend")
-		public List<String> friends = List.of("darkosto");
+		@Comment("A list of users who can be chosen when it spawns a distant friend.\n"+
+				"Format: \"<username>\" or \"<username>,<base64 texture>\" (optional)")
+		public List<String> friends = List.of("darkosto", "shynieke", "mrbysco");
 
 		@Comment("Add the players from the whitelist to the Friends list [default: true]")
 		public boolean addWhitelistPlayers = true;

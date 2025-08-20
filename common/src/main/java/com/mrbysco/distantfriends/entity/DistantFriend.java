@@ -1,8 +1,10 @@
 package com.mrbysco.distantfriends.entity;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.PropertyMap;
 import com.mrbysco.distantfriends.Constants;
 import com.mrbysco.distantfriends.FriendNamesCache;
+import com.mrbysco.distantfriends.PlayerData;
 import com.mrbysco.distantfriends.entity.goal.LookedAtGoal;
 import com.mrbysco.distantfriends.platform.Services;
 import net.minecraft.Util;
@@ -43,6 +45,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import com.mojang.authlib.properties.Property;
 
 import java.util.List;
 import java.util.Optional;
@@ -205,14 +208,23 @@ public class DistantFriend extends PathfinderMob {
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
 		spawnDataIn = super.finalizeSpawn(level, difficultyIn, reason, spawnDataIn);
 
-		List<String> friends = FriendNamesCache.nameList;
+		List<PlayerData> friends = FriendNamesCache.nameList;
 		if (!friends.isEmpty()) {
-			String name = friends.get(random.nextInt(friends.size()));
+			PlayerData data = friends.get(random.nextInt(friends.size()));
+			String name = data.name();
 //			DistantFriends.LOGGER.info("Spawned Distant friend with name {}", name);
 			SkullBlockEntity.fetchGameProfile(name)
 					.thenAccept(
 							profile -> {
-								this.setProfile(new ResolvableProfile(profile.orElse(new GameProfile(Util.NIL_UUID, name))));
+								GameProfile usedProfile = profile.orElse(new GameProfile(Util.NIL_UUID, name));
+								ResolvableProfile resolvableProfile = new ResolvableProfile(usedProfile);
+								PropertyMap properties = resolvableProfile.properties();
+								if (data.texture() != null) {
+									properties.clear();
+									properties.put("textures", new Property("textures", data.texture()));
+								}
+
+								this.setProfile(resolvableProfile);
 								this.setCustomName(Component.literal(name));
 							}
 					);
