@@ -3,16 +3,12 @@ package com.mrbysco.distantfriends.entity;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
-import com.mrbysco.distantfriends.Constants;
 import com.mrbysco.distantfriends.entity.goal.LookedAtGoal;
 import com.mrbysco.distantfriends.platform.Services;
 import com.mrbysco.distantfriends.util.FriendNamesCache;
 import com.mrbysco.distantfriends.util.PlayerData;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundEntityEventPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -45,6 +41,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -150,26 +148,25 @@ public class DistantFriend extends PathfinderMob {
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundTag tag) {
-		super.addAdditionalSaveData(tag);
-		tag.putBoolean("inView", isInView());
-		tag.putBoolean("lookedAt", isLookedAt());
-		tag.putBoolean("profileExists", entityData.get(RESOLVABLE_PROFILE).isPresent());
+	public void addAdditionalSaveData(ValueOutput output) {
+		super.addAdditionalSaveData(output);
+		output.putBoolean("inView", isInView());
+		output.putBoolean("lookedAt", isLookedAt());
+		output.putBoolean("profileExists", entityData.get(RESOLVABLE_PROFILE).isPresent());
 		if (getProfile().isPresent()) {
-			tag.put("profile", ResolvableProfile.CODEC.encodeStart(NbtOps.INSTANCE, entityData.get(RESOLVABLE_PROFILE).get()).getOrThrow());
+			output.store("profile", ResolvableProfile.CODEC, entityData.get(RESOLVABLE_PROFILE).get());
 		}
 	}
 
 	@Override
-	public void load(CompoundTag tag) {
-		super.load(tag);
-		setInView(tag.getBooleanOr("inView", false));
-		setLookedAt(tag.getBooleanOr("lookedAt", false));
-		boolean profileExists = tag.getBooleanOr("profileExists", false);
+	public void load(ValueInput input) {
+		super.load(input);
+		setInView(input.getBooleanOr("inView", false));
+		setLookedAt(input.getBooleanOr("lookedAt", false));
+		boolean profileExists = input.getBooleanOr("profileExists", false);
 		if (profileExists) {
-			entityData.set(RESOLVABLE_PROFILE, ResolvableProfile.CODEC
-					.parse(NbtOps.INSTANCE, tag.get("profile"))
-					.resultOrPartial(error -> Constants.LOGGER.error("Failed to load profile from Distant Friend: {}", error)));
+			Optional<ResolvableProfile> optionalProfile = input.read("profile", ResolvableProfile.CODEC);
+			entityData.set(RESOLVABLE_PROFILE, optionalProfile);
 		} else {
 			entityData.set(RESOLVABLE_PROFILE, Optional.empty());
 		}
