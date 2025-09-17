@@ -1,1 +1,1 @@
-* Update to 1.21.8
+* Add spawn weight config (Fabric only since you can use datapacks for it on Neoforge)
