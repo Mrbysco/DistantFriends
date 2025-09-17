@@ -6,5 +6,7 @@
   "text.autoconfig.distantfriends.option.general": "General",
   "text.autoconfig.distantfriends.option.general.addWhitelistPlayers": "Add Whitelist Players",
   "text.autoconfig.distantfriends.option.general.friends": "Friends",
+  "text.autoconfig.distantfriends.option.spawning": "Spawning",
+  "text.autoconfig.distantfriends.option.spawning.spawnWeight": "Spawn Weight",
   "text.autoconfig.distantfriends.title": "Distant Friends"
 }
