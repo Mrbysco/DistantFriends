@@ -17,6 +17,9 @@ public class FriendConfigFabric implements ConfigData {
 	@ConfigEntry.Gui.CollapsibleObject
 	public Compat compat = new Compat();
 
+	@ConfigEntry.Gui.CollapsibleObject
+	public Spawning spawning = new Spawning();
+
 	public static class General {
 
 		@Comment("A list of users who can be chosen when it spawns a distant friend.\n"+
@@ -27,6 +30,11 @@ public class FriendConfigFabric implements ConfigData {
 		public boolean addWhitelistPlayers = true;
 	}
 
+	public static class Spawning {
+
+		@Comment("The spawn weight of the distant friend (Must be above 0) (Requires a restart) [default: 20]")
+		public int spawnWeight = 20;
+	}
 
 	public static class Compat {
 
@@ -39,6 +47,11 @@ public class FriendConfigFabric implements ConfigData {
 
 	@Override
 	public void validatePostLoad() throws ValidationException {
+		// Validate spawn weight
+		if (spawning.spawnWeight <= 0) {
+			spawning.spawnWeight = 20; // Reset to default
+			throw new ValidationException("Spawn weight must be above 0 for distant friends. Resetting to default (20).");
+		}
 		if (!compat.playerMobsWhitelist.isEmpty()) {
 			for (String link : compat.playerMobsWhitelist) {
 				if (!link.startsWith("https://whitelist.gorymoon.se")) {

@@ -47,6 +47,8 @@ public class DistantDatagen implements DataGeneratorEntrypoint {
 			builder.add("text.autoconfig.distantfriends.option.general", "General");
 			builder.add("text.autoconfig.distantfriends.option.general.friends", "Friends");
 			builder.add("text.autoconfig.distantfriends.option.general.addWhitelistPlayers", "Add Whitelist Players");
+			builder.add("text.autoconfig.distantfriends.option.spawning", "Spawning");
+			builder.add("text.autoconfig.distantfriends.option.spawning.spawnWeight", "Spawn Weight");
 			builder.add("text.autoconfig.distantfriends.option.compat", "Compat");
 			builder.add("text.autoconfig.distantfriends.option.compat.playerMobsCompat", "Player Mobs Compat");
 			builder.add("text.autoconfig.distantfriends.option.compat.playerMobsWhitelist", "Player Mobs Whitelist");
