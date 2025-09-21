@@ -135,6 +135,12 @@ public class DistantFriend extends PathfinderMob {
 	}
 
 	@Override
+	public void aiStep() {
+		this.updateSwingTime();
+		super.aiStep();
+	}
+
+	@Override
 	protected void customServerAiStep(ServerLevel level) {
 		if (this.tickCount > 80 && tickCount % 20 == 0 && this.isAlive()) {
 			if (!level.getNearbyPlayers(findPlayerCondition, this, this.getBoundingBox().inflate(16.0D, 32.0D, 16.0D)).isEmpty()) {
@@ -201,7 +207,6 @@ public class DistantFriend extends PathfinderMob {
 
 		return spawnDataIn;
 	}
-
 
 	public boolean isLookingAtMe(Player player) {
 		Vec3 vec3 = player.getViewVector(1.0F).normalize();

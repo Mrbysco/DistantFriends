@@ -11,7 +11,6 @@ import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
@@ -30,7 +29,7 @@ import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public class FriendRenderer extends LivingEntityRenderer<DistantFriend, DistantFriendRenderState, FriendModel> {
+public class FriendRenderer extends HumanoidMobRenderer<DistantFriend, DistantFriendRenderState, FriendModel> {
 	public static final PlayerSkin defaultSkin = DefaultPlayerSkin.getDefaultSkin();
 	private final FriendModel playerModel;
 	private final FriendModel slimPlayerModel;
@@ -66,8 +65,8 @@ public class FriendRenderer extends LivingEntityRenderer<DistantFriend, DistantF
 	public void extractRenderState(DistantFriend friend, DistantFriendRenderState renderState, float partialTick) {
 		super.extractRenderState(friend, renderState, partialTick);
 		HumanoidMobRenderer.extractHumanoidRenderState(friend, renderState, partialTick, this.itemModelResolver);
-		renderState.leftArmPose = getArmPose(friend, HumanoidArm.LEFT);
-		renderState.rightArmPose = getArmPose(friend, HumanoidArm.RIGHT);
+		renderState.leftArmPose = getFriendArmPose(friend, HumanoidArm.LEFT);
+		renderState.rightArmPose = getFriendArmPose(friend, HumanoidArm.RIGHT);
 		renderState.swinging = friend.swinging;
 		renderState.isSpectator = friend.isSpectator();
 
@@ -110,11 +109,11 @@ public class FriendRenderer extends LivingEntityRenderer<DistantFriend, DistantF
 		return renderState.isCrouching ? vec3.add((double) 0.0F, (double) (renderState.scale * -2.0F) / (double) 16.0F, (double) 0.0F) : vec3;
 	}
 
-	private static HumanoidModel.ArmPose getArmPose(DistantFriend player, HumanoidArm arm) {
+	private static HumanoidModel.ArmPose getFriendArmPose(DistantFriend player, HumanoidArm arm) {
 		ItemStack itemstack = player.getItemInHand(InteractionHand.MAIN_HAND);
 		ItemStack itemstack1 = player.getItemInHand(InteractionHand.OFF_HAND);
-		HumanoidModel.ArmPose humanoidmodel$armpose = getArmPose(player, itemstack, InteractionHand.MAIN_HAND);
-		HumanoidModel.ArmPose humanoidmodel$armpose1 = getArmPose(player, itemstack1, InteractionHand.OFF_HAND);
+		HumanoidModel.ArmPose humanoidmodel$armpose = getFriendArmPose(player, itemstack, InteractionHand.MAIN_HAND);
+		HumanoidModel.ArmPose humanoidmodel$armpose1 = getFriendArmPose(player, itemstack1, InteractionHand.OFF_HAND);
 		if (humanoidmodel$armpose.isTwoHanded()) {
 			humanoidmodel$armpose1 = itemstack1.isEmpty() ? HumanoidModel.ArmPose.EMPTY : HumanoidModel.ArmPose.ITEM;
 		}
@@ -126,11 +125,11 @@ public class FriendRenderer extends LivingEntityRenderer<DistantFriend, DistantF
 	 * @deprecated
 	 */
 	@Deprecated
-	private static HumanoidModel.ArmPose getArmPose(DistantFriend friend, ItemStack stack, InteractionHand hand) {
-		return getArmPose(friend, stack, hand, (HumanoidModel.ArmPose) null);
+	private static HumanoidModel.ArmPose getFriendArmPose(DistantFriend friend, ItemStack stack, InteractionHand hand) {
+		return getFriendArmPose(friend, stack, hand, (HumanoidModel.ArmPose) null);
 	}
 
-	private static HumanoidModel.ArmPose getArmPose(DistantFriend friend, ItemStack stack, InteractionHand hand, @Nullable HumanoidModel.ArmPose pose) {
+	private static HumanoidModel.ArmPose getFriendArmPose(DistantFriend friend, ItemStack stack, InteractionHand hand, @Nullable HumanoidModel.ArmPose pose) {
 		if (pose != null) {
 			return pose;
 		} else if (stack.isEmpty()) {
