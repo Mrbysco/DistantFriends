@@ -162,6 +162,7 @@ public class DistantFriend extends PathfinderMob {
 
 	@Override
 	public void aiStep() {
+		this.updateSwingTime();
 		if (this.tickCount > 80 && tickCount % 20 == 0) {
 			if (!this.level().getNearbyPlayers(findPlayerCondition, this, this.getBoundingBox().inflate(16.0D, 32.0D, 16.0D)).isEmpty()) {
 				for (int i = 0; i < 20; ++i) {
