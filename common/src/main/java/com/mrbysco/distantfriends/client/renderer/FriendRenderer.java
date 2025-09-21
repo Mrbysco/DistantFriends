@@ -55,6 +55,7 @@ public class FriendRenderer extends MobRenderer<DistantFriend, FriendModel> {
 		super.render(distantFriend, entityYaw, partialTicks, poseStack, bufferSource, packedLightIn);
 	}
 
+	@Override
 	protected void scale(DistantFriend friend, PoseStack poseStack, float partialTickTime) {
 		float f = 0.9375F;
 		poseStack.scale(f, f, f);
