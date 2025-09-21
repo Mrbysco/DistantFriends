@@ -1,1 +1,1 @@
-* Allow supplying base64 textures with the player names in the config overriding the original skin. The format is `"username,BASE64"`
+* Fix arm swinging on Distant Friends
