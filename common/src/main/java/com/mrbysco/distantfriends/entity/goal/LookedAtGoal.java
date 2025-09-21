@@ -2,6 +2,7 @@ package com.mrbysco.distantfriends.entity.goal;
 
 import com.mrbysco.distantfriends.entity.DistantFriend;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
@@ -94,6 +95,7 @@ public class LookedAtGoal extends Goal {
 			if (friend.tickCount % punchInterval == 0) {
 				punchInterval = random.nextInt(25) + 10;
 				friend.setAggressive(!friend.isAggressive());
+				friend.swing(InteractionHand.MAIN_HAND);
 			}
 		}
 	}

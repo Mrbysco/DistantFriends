@@ -19,9 +19,5 @@ public class FriendModel extends PlayerModel<DistantFriend> {
 
 		//Make crouch if looked at
 		this.crouching = friend.isCrouching();
-
-		if (friend.isAggressive()) {
-			rightArm.xRot = -1.0F;
-		}
 	}
 }
