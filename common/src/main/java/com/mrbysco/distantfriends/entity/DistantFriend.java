@@ -163,6 +163,11 @@ public class DistantFriend extends PathfinderMob {
 	}
 
 	@Override
+	public void aiStep() {
+		this.updateSwingTime();
+	}
+
+	@Override
 	protected void customServerAiStep(ServerLevel level) {
 		if (this.tickCount > 80 && tickCount % 20 == 0 && this.isAlive()) {
 			if (!level.getNearbyPlayers(findPlayerCondition, this, this.getBoundingBox().inflate(16.0D, 32.0D, 16.0D)).isEmpty()) {
