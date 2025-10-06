@@ -165,6 +165,7 @@ public class DistantFriend extends PathfinderMob {
 	@Override
 	public void aiStep() {
 		this.updateSwingTime();
+		super.aiStep();
 	}
 
 	@Override
@@ -194,8 +195,10 @@ public class DistantFriend extends PathfinderMob {
 	@Override
 	public void load(CompoundTag tag) {
 		super.load(tag);
-		setInView(tag.getBoolean("inView"));
-		setLookedAt(tag.getBoolean("lookedAt"));
+		if (tag.contains("inView"))
+			setInView(tag.getBoolean("inView"));
+		if (tag.contains("lookedAt"))
+			setLookedAt(tag.getBoolean("lookedAt"));
 		boolean profileExists = tag.getBoolean("profileExists");
 		if (profileExists) {
 			entityData.set(RESOLVABLE_PROFILE, ResolvableProfile.CODEC
@@ -235,7 +238,6 @@ public class DistantFriend extends PathfinderMob {
 
 		return spawnDataIn;
 	}
-
 
 	public boolean isLookingAtMe(Player player) {
 		Vec3 vec3 = player.getViewVector(1.0F).normalize();
