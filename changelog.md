@@ -1,1 +1,1 @@
-* Add spawn weight config (Fabric only since you can use datapacks for it on Neoforge)
+* Fix Distant Friend punching animation
