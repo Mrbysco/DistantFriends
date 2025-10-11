@@ -1,28 +1,18 @@
 package com.mrbysco.distantfriends.data;
 
 import com.mrbysco.distantfriends.Constants;
-import com.mrbysco.distantfriends.registration.FriendRegistry;
-import com.mrbysco.distantfriends.registration.RegistryObject;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
-import net.minecraft.core.WritableRegistry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.loot.EntityLootSubProvider;
-import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
-import net.minecraft.util.ProblemReporter;
 import net.minecraft.util.random.Weighted;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.ValidationContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
@@ -33,10 +23,8 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Stream;
 
 @EventBusSubscriber
 public class DistantDatagen {
@@ -46,8 +34,6 @@ public class DistantDatagen {
 		DataGenerator generator = event.getGenerator();
 		PackOutput packOutput = generator.getPackOutput();
 		CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
-
-		generator.addProvider(true, new Loots(packOutput, lookupProvider));
 
 		generator.addProvider(true, new Datapack(
 				packOutput, lookupProvider, Set.of(Constants.MOD_ID)));
@@ -62,7 +48,7 @@ public class DistantDatagen {
 					final HolderGetter<Biome> biomeHolderGetter = context.lookup(Registries.BIOME);
 					final BiomeModifier addSpawn = BiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(
 							biomeHolderGetter.getOrThrow(BiomeTags.IS_OVERWORLD),
-							new Weighted<>(new MobSpawnSettings.SpawnerData(FriendRegistry.FRIEND.get(), 1, 2), 20));
+							new Weighted<>(new MobSpawnSettings.SpawnerData(EntityType.MANNEQUIN, 1, 2), 20));
 
 					context.register(createKey("add_distant_friend"), addSpawn);
 				});
@@ -76,35 +62,6 @@ public class DistantDatagen {
 		return ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, Constants.modLoc(name));
 	}
 
-	private static class Loots extends LootTableProvider {
-		public Loots(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
-			super(packOutput, Set.of(), List.of(
-					new SubProviderEntry(FriendLootProvider::new, LootContextParamSets.ENTITY)
-			), lookupProvider);
-		}
-
-		public static class FriendLootProvider extends EntityLootSubProvider {
-			protected FriendLootProvider(HolderLookup.Provider provider) {
-				super(FeatureFlags.REGISTRY.allFlags(), provider);
-			}
-
-			@Override
-			public void generate() {
-				this.add(FriendRegistry.FRIEND.get(), LootTable.lootTable());
-			}
-
-			@Override
-			protected Stream<EntityType<?>> getKnownEntityTypes() {
-				return FriendRegistry.ENTITY_TYPES.getEntries().stream().map(RegistryObject::get);
-			}
-		}
-
-		@Override
-		protected void validate(WritableRegistry<LootTable> writableRegistry, ValidationContext validationContext, ProblemReporter.Collector problemReporter) {
-			super.validate(writableRegistry, validationContext, problemReporter);
-		}
-	}
-
 	private static class Language extends LanguageProvider {
 		public Language(PackOutput packOutput) {
 			super(packOutput, Constants.MOD_ID, "en_us");
@@ -112,13 +69,13 @@ public class DistantDatagen {
 
 		@Override
 		protected void addTranslations() {
-			this.addEntityType(FriendRegistry.FRIEND, "Distant Friend");
-
 			addConfig("title", "Distant Friends Config", null);
 
 			addConfig("friend_settings", "Friends", "Friend Settings");
 			addConfig("friends", "Friends", "A list of users who can be chosen when it spawns a distant friend");
+			addConfig("spawnDimensions", "Friends", "A list of dimensions where distant friends can spawn, using their resource location");
 			addConfig("addWhitelistPlayers", "Add Whitelist Players", "Add the players from the whitelist to the Friends list [default: true]");
+			addConfig("showName", "Show Name", "Show the name of the friend above their head");
 
 			addConfig("compat_settings", "Compat", "Compat Settings");
 			addConfig("playerMobsCompat", "Player Mobs Compat", "Add players from a Player Mobs whitelist to the Friends list [default: false]");

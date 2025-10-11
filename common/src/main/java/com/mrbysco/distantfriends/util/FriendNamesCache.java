@@ -2,7 +2,9 @@ package com.mrbysco.distantfriends.util;
 
 import com.mrbysco.distantfriends.Constants;
 import com.mrbysco.distantfriends.platform.Services;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.players.UserWhiteList;
+import net.minecraft.world.entity.player.PlayerModelType;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -48,6 +50,11 @@ public class FriendNamesCache {
 		}
 	}
 
+	/**
+	 * Generate a list of PlayerData from the friends list
+	 *
+	 * @return List of PlayerData
+	 */
 	public static List<PlayerData> generateDataList() {
 		List<PlayerData> dataList = new ArrayList<>();
 		List<? extends String> names = new ArrayList<>(Services.PLATFORM.getFriends());
@@ -57,19 +64,35 @@ public class FriendNamesCache {
 			}
 			// Split on comma, left = name, right = texture
 			String[] parts = entry.split(",");
-			String texture = null;
+			String secondEntry = null;
+			PlayerModelType bodyType = null;
 			if (parts.length > 1) {
-				texture = parts[1].trim();
 				entry = parts[0].trim();
-				// Use regex to check if texture is valid base64 or if it might be malformed
-				if (!texture.matches("^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$")) {
-					Constants.LOGGER.error("Malformed base64 texture for friend: {}, {}", entry, texture);
-					Constants.LOGGER.error("If you inserted this base64 from the config screen the base64 was likely cut off due to the text limitations of the text field.");
-					texture = null;
+				secondEntry = parts[1].trim();
+				// Check for body type (texture part can be "slim" or "wide" to indicate model type)
+				if (secondEntry.equals("slim") || secondEntry.equals("wide")) {
+					bodyType = secondEntry.equals("slim") ? PlayerModelType.SLIM : PlayerModelType.WIDE;
+					secondEntry = "";
+				} else {
+					if (parts.length > 2) {
+						String type = parts[2].trim().toLowerCase();
+						if (type.equals("slim")) {
+							bodyType = PlayerModelType.SLIM;
+						} else if (type.equals("wide")) {
+							bodyType = PlayerModelType.WIDE;
+						}
+					}
+				}
+				// Validate ResourceLocation
+				if (!secondEntry.isEmpty()) {
+					if (ResourceLocation.tryParse(secondEntry) == null) {
+						Constants.LOGGER.error("Malformed ResourceLocation for friend: {}, {}", entry, secondEntry);
+						secondEntry = null;
+					}
 				}
 			}
 
-			dataList.add(new PlayerData(entry, texture));
+			dataList.add(new PlayerData(entry, secondEntry, bodyType));
 		}
 
 		return dataList;

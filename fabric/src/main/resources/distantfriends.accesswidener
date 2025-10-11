@@ -1,2 +1,4 @@
 accessWidener   v1      named
-accessible method net/minecraft/world/level/block/entity/SkullBlockEntity fetchGameProfile (Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
+accessible method net/minecraft/world/entity/decoration/Mannequin setProfile (Lnet/minecraft/world/item/component/ResolvableProfile;)V
+accessible method net/minecraft/world/entity/decoration/Mannequin setHideDescription (Z)V
+accessible method net/minecraft/world/item/component/ResolvableProfile$Dynamic <init> (Lcom/mojang/datafixers/util/Either;Lnet/minecraft/world/entity/player/PlayerSkin$Patch;)V

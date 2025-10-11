@@ -11,6 +11,9 @@
   "distantfriends.configuration.playerMobsCompat.tooltip": "Add players from a Player Mobs whitelist to the Friends list [default: false]",
   "distantfriends.configuration.playerMobsNameLinks": "Player Mobs Name Links",
   "distantfriends.configuration.playerMobsNameLinks.tooltip": "The player mobs Name Links",
-  "distantfriends.configuration.title": "Distant Friends Config",
-  "entity.distantfriends.friend": "Distant Friend"
+  "distantfriends.configuration.showName": "Show Name",
+  "distantfriends.configuration.showName.tooltip": "Show the name of the friend above their head",
+  "distantfriends.configuration.spawnDimensions": "Friends",
+  "distantfriends.configuration.spawnDimensions.tooltip": "A list of dimensions where distant friends can spawn, using their resource location",
+  "distantfriends.configuration.title": "Distant Friends Config"
 }

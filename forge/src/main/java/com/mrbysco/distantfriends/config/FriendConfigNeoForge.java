@@ -2,6 +2,7 @@ package com.mrbysco.distantfriends.config;
 
 import com.mrbysco.distantfriends.Constants;
 import com.mrbysco.distantfriends.util.FriendNamesCache;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -10,12 +11,14 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 
-public class FriendConfigForge {
+public class FriendConfigNeoForge {
 
 	public static class Common {
 
 		public final ConfigValue<List<? extends String>> friends;
+		public final ConfigValue<List<? extends String>> spawnDimensions;
 		public final ModConfigSpec.BooleanValue addWhitelistPlayers;
+		public final ModConfigSpec.BooleanValue showName;
 
 		public final ModConfigSpec.BooleanValue playerMobsCompat;
 		public final ConfigValue<List<? extends String>> playerMobsNameLinks;
@@ -26,11 +29,20 @@ public class FriendConfigForge {
 
 			friends = builder
 					.comment("A list of users who can be chosen when it spawns a distant friend. ",
-							"Format: \"<username>\" or \"<username>,<base64 texture>\" (optional)")
+							"Format: \"<username>\", \"<username>,<texture_location/body_type>\" or \"<username>,<texture_location/body_type>,<body_type>\"",
+							"Example: \"darkosto\" or \"darkosto,minecraft:entity/player/slim/noor,slim\"")
 					.defineListAllowEmpty("friends", List.of("darkosto", "shynieke", "mrbysco"), String::new, o -> (o instanceof String));
+			spawnDimensions = builder
+					.comment("A list of dimensions where distant friends can spawn, using their resource location. ",
+							"Format: \"<namespace>:<path>\"",
+							"Example: \"minecraft:overworld\" or \"minecraft:the_nether\"")
+					.defineListAllowEmpty("spawnDimensions", List.of("minecraft:overworld"), String::new, o -> (o instanceof String) && ResourceLocation.tryParse((String) o) != null);
 			addWhitelistPlayers = builder
 					.comment("Add the players from the whitelist to the Friends list [default: true]")
 					.define("addWhitelistPlayers", true);
+			showName = builder
+					.comment("Show the name of the friend above their head [default: true]")
+					.define("showName", true);
 
 			builder.pop();
 

@@ -1,45 +1,64 @@
 package com.mrbysco.distantfriends.platform;
 
-import com.mrbysco.distantfriends.config.FriendConfigForge;
+import com.mrbysco.distantfriends.DistantFriendsNeoForge;
+import com.mrbysco.distantfriends.config.FriendConfigNeoForge;
 import com.mrbysco.distantfriends.platform.services.IPlatformHelper;
-import com.mrbysco.distantfriends.registry.FriendSerializers;
-import net.minecraft.network.syncher.EntityDataSerializer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.item.component.ResolvableProfile;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.decoration.Mannequin;
+import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.util.List;
-import java.util.Optional;
 
 public class NeoForgePlatformHelper implements IPlatformHelper {
 
 	@Override
-	public EntityDataSerializer<Optional<ResolvableProfile>> getResolvableProfileSerializer() {
-		return FriendSerializers.OPTIONAL_RESOLVABLE_PROFILE.get();
-	}
-
-	@Override
 	public List<? extends String> getFriends() {
-		return FriendConfigForge.COMMON.friends.get();
+		return FriendConfigNeoForge.COMMON.friends.get();
 	}
 
 	@Override
 	public boolean addWhitelistPlayers() {
-		return FriendConfigForge.COMMON.addWhitelistPlayers.get();
+		return FriendConfigNeoForge.COMMON.addWhitelistPlayers.get();
 	}
 
 	@Override
 	public boolean playerMobsCompat() {
-		return FriendConfigForge.COMMON.playerMobsCompat.get();
+		return FriendConfigNeoForge.COMMON.playerMobsCompat.get();
 	}
 
 	@Override
 	public List<? extends String> getPlayerMobsNameLinks() {
-		return FriendConfigForge.COMMON.playerMobsNameLinks.get();
+		return FriendConfigNeoForge.COMMON.playerMobsNameLinks.get();
+	}
+
+	@Override
+	public boolean showName() {
+		return FriendConfigNeoForge.COMMON.showName.get();
 	}
 
 	@Override
 	public MinecraftServer getServer() {
 		return ServerLifecycleHooks.getCurrentServer();
+	}
+
+	@Override
+	public void attachFriendData(Mannequin friend) {
+		friend.setData(DistantFriendsNeoForge.IS_FRIEND, true);
+	}
+
+	@Override
+	public List<? extends Mannequin> getNearbyFriends(ServerLevel serverLevel, BlockPos pos, int horizontalRange, int verticalRange) {
+		return serverLevel.getEntitiesOfClass(Mannequin.class, new AABB(pos).inflate(horizontalRange, verticalRange, horizontalRange), mannequin ->
+				mannequin.hasData(DistantFriendsNeoForge.IS_FRIEND)
+		);
+	}
+
+	@Override
+	public boolean isDimensionAllowed(ResourceLocation dimension) {
+		return FriendConfigNeoForge.COMMON.spawnDimensions.get().contains(dimension.toString());
 	}
 }

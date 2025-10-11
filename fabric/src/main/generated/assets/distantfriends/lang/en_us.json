@@ -1,11 +1,12 @@
 {
-  "entity.distantfriends.friend": "Distant Friend",
   "text.autoconfig.distantfriends.option.compat": "Compat",
   "text.autoconfig.distantfriends.option.compat.playerMobsCompat": "Player Mobs Compat",
   "text.autoconfig.distantfriends.option.compat.playerMobsWhitelist": "Player Mobs Whitelist",
   "text.autoconfig.distantfriends.option.general": "General",
   "text.autoconfig.distantfriends.option.general.addWhitelistPlayers": "Add Whitelist Players",
   "text.autoconfig.distantfriends.option.general.friends": "Friends",
+  "text.autoconfig.distantfriends.option.general.showName": "Show Name",
+  "text.autoconfig.distantfriends.option.general.spawnDimensions": "Spawn Dimensions",
   "text.autoconfig.distantfriends.option.spawning": "Spawning",
   "text.autoconfig.distantfriends.option.spawning.spawnWeight": "Spawn Weight",
   "text.autoconfig.distantfriends.title": "Distant Friends"

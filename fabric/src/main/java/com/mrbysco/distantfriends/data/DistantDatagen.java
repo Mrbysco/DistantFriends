@@ -1,37 +1,18 @@
 package com.mrbysco.distantfriends.data;
 
-import com.mrbysco.distantfriends.registration.FriendRegistry;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
-import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.function.BiConsumer;
 
 public class DistantDatagen implements DataGeneratorEntrypoint {
 	@Override
 	public void onInitializeDataGenerator(FabricDataGenerator generator) {
 		var pack = generator.createPack();
-
-		pack.addProvider(Loots::new);
 		pack.addProvider(Language::new);
-	}
-
-	private static class Loots extends SimpleFabricLootTableProvider {
-		public Loots(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
-			super(dataOutput, registryLookup, LootContextParamSets.ENTITY);
-		}
-
-		@Override
-		public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> biConsumer) {
-			biConsumer.accept(FriendRegistry.FRIEND.get().getDefaultLootTable().get(), LootTable.lootTable());
-		}
 	}
 
 	private static class Language extends FabricLanguageProvider {
@@ -41,12 +22,12 @@ public class DistantDatagen implements DataGeneratorEntrypoint {
 
 		@Override
 		public void generateTranslations(HolderLookup.Provider registryLookup, TranslationBuilder builder) {
-			builder.add(FriendRegistry.FRIEND.get(), "Distant Friend");
-
 			builder.add("text.autoconfig.distantfriends.title", "Distant Friends");
 			builder.add("text.autoconfig.distantfriends.option.general", "General");
 			builder.add("text.autoconfig.distantfriends.option.general.friends", "Friends");
+			builder.add("text.autoconfig.distantfriends.option.general.spawnDimensions", "Spawn Dimensions");
 			builder.add("text.autoconfig.distantfriends.option.general.addWhitelistPlayers", "Add Whitelist Players");
+			builder.add("text.autoconfig.distantfriends.option.general.showName", "Show Name");
 			builder.add("text.autoconfig.distantfriends.option.spawning", "Spawning");
 			builder.add("text.autoconfig.distantfriends.option.spawning.spawnWeight", "Spawn Weight");
 			builder.add("text.autoconfig.distantfriends.option.compat", "Compat");

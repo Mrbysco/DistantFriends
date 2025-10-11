@@ -21,19 +21,19 @@
     "main": [
       "com.mrbysco.distantfriends.DistantFriendsFabric"
     ],
-    "client": [
-      "com.mrbysco.distantfriends.DistantFriendsFabricClient"
-    ],
     "modmenu": [
       "com.mrbysco.distantfriends.config.DistantFriendsMenuIntegration"
     ]
   },
+  "mixins": [
+    "distantfriends.mixins.json"
+  ],
   "depends": {
-    "fabricloader": ">=0.16.14",
-    "minecraft": "~1.21.7",
+    "fabricloader": ">=0.17.2",
+    "minecraft": "~1.21.9",
     "java": ">=21",
     "fabric-api": "*",
-    "cloth-config": ">=19"
+    "cloth-config": ">=20"
   },
   "accessWidener": "distantfriends.accesswidener"
 }

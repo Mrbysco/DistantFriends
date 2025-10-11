@@ -22,12 +22,23 @@ public class FriendConfigFabric implements ConfigData {
 
 	public static class General {
 
-		@Comment("A list of users who can be chosen when it spawns a distant friend.\n"+
-				"Format: \"<username>\" or \"<username>,<base64 texture>\" (optional)")
-		public List<String> friends = List.of("darkosto", "shynieke", "mrbysco");
+		@Comment("""
+				A list of users who can be chosen when it spawns a distant friend.
+				Format: "<username>", "<username>,<texture_location/body_type>" or "<username>,<texture_location/body_type>,<body_type>"
+				Example: "darkosto" or "darkosto,minecraft:entity/player/slim/noor,slim\"""")
+		public List<String> friends = List.of("Darkosto", "ShyNieke", "Mrbysco");
+
+		@Comment("""
+				A list of dimensions where distant friends can spawn, using their resource location.\s
+				Format: "<namespace>:<path>"
+				Example: "minecraft:overworld" or "minecraft:the_nether\"""")
+		public List<String> spawnDimensions = List.of("minecraft:overworld");
 
 		@Comment("Add the players from the whitelist to the Friends list [default: true]")
 		public boolean addWhitelistPlayers = true;
+
+		@Comment("Show the name of the friend above their head [default: true]")
+		public boolean showName = true;
 	}
 
 	public static class Spawning {

@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8.4",
+  "package": "com.mrbysco.distantfriends.mixin",
+  "refmap": "distantfriends.refmap.json",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "LivingEntityMixin",
+    "ServerLevelMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
+  

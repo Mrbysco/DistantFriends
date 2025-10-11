@@ -15,12 +15,12 @@ Don't mind them, they just like looking at you
 [[dependencies.distantfriends]]
 modId="minecraft"
 type="REQUIRED"
-versionRange="[1.21.7,1.22)"
+versionRange="[1.21.9,1.22)"
 ordering="NONE"
 side="BOTH"
 [[dependencies.distantfriends]]
 modId="neoforge"
 type="required"
-versionRange="[21.7.0-beta,)"
+versionRange="[21.9.0-beta,)"
 ordering="NONE"
 side="BOTH"
