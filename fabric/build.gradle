@@ -120,7 +120,7 @@ if (System.getenv().CURSEFORGE_KEY) {
         apiToken = System.getenv().CURSEFORGE_KEY
 
         def mainFile = upload(project.curseforge_id, remapJar)
-        mainFile.releaseType = 'alpha'
+        mainFile.releaseType = 'beta'
         mainFile.addGameVersion "Fabric"
         mainFile.addGameVersion "${minecraft_version}"
         mainFile.addGameVersion "Java 21"
@@ -138,7 +138,7 @@ if (System.getenv().MODRINTH_KEY) {
     modrinth {
         token = System.getenv().MODRINTH_KEY
         projectId = project.modrinth_id
-        versionType = "alpha"
+        versionType = "beta"
         versionName = "${mod_name} ${minecraft_version}"
         versionNumber = project.version
         uploadFile = remapJar
