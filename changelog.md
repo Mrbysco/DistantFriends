@@ -1,1 +1,1 @@
-* Fix arm swinging on Distant Friends
+* Automatically convert usernames in the config to lowercase
