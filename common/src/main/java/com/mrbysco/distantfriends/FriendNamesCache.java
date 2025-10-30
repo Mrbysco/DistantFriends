@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class FriendNamesCache {
 
@@ -67,7 +68,7 @@ public class FriendNamesCache {
 				}
 			}
 
-			dataList.add(new PlayerData(entry, texture));
+			dataList.add(new PlayerData(entry.toLowerCase(Locale.ROOT), texture));
 		}
 
 		return dataList;
