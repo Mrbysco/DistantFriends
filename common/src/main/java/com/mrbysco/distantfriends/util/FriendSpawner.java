@@ -31,7 +31,7 @@ public class FriendSpawner implements CustomSpawner {
 		if (this.nextTick <= 0) {
 			this.nextTick = TICK_DELAY;
 			Player player = level.getRandomPlayer();
-			if (player != null && Services.PLATFORM.isDimensionAllowed(level.dimension().location())) {
+			if (player != null && Services.PLATFORM.isDimensionAllowed(level.dimension().identifier())) {
 				RandomSource randomsource = level.random;
 				BlockPos playerPos = player.blockPosition();
 				for (int attempt = 0; attempt < NUMBER_OF_SPAWN_ATTEMPTS; attempt++) {

@@ -4,7 +4,7 @@ import com.mrbysco.distantfriends.DistantFriendsFabric;
 import com.mrbysco.distantfriends.platform.services.IPlatformHelper;
 import com.mrbysco.distantfriends.util.ServerInstance;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.decoration.Mannequin;
@@ -57,7 +57,7 @@ public class FabricPlatformHelper implements IPlatformHelper {
 	}
 
 	@Override
-	public boolean isDimensionAllowed(ResourceLocation dimension) {
+	public boolean isDimensionAllowed(Identifier dimension) {
 		return DistantFriendsFabric.config.get().general.spawnDimensions.contains(dimension.toString());
 	}
 }

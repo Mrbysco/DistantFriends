@@ -7,7 +7,7 @@ import com.mrbysco.distantfriends.util.PlayerData;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.ClientAsset;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -131,7 +131,7 @@ public class CommonClass {
 			// If texture is specified, it will be used regardless of the name
 			Optional<ClientAsset.ResourceTexture> skin = Optional.empty();
 			if (texture != null && !texture.isEmpty()) {
-				ResourceLocation location = ResourceLocation.tryParse(texture);
+				Identifier location = Identifier.tryParse(texture);
 				if (location != null)
 					skin = Optional.of(new ClientAsset.ResourceTexture(location));
 			}

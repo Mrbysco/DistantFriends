@@ -20,7 +20,7 @@ public class DistantCommands {
 	public static void initializeCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
 		final LiteralArgumentBuilder<CommandSourceStack> root = Commands.literal(Constants.MOD_ID);
 		// Add spawnFriend command that has optional argument for name
-		root.requires((sourceStack) -> sourceStack.hasPermission(2))
+		root.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 				.then(Commands.literal("spawnFriend")
 						.executes((commandContext) ->
 								spawnFriend(commandContext, commandContext.getSource().getPosition())

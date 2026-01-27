@@ -1,7 +1,7 @@
 package com.mrbysco.distantfriends.platform.services;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.decoration.Mannequin;
@@ -76,5 +76,5 @@ public interface IPlatformHelper {
 	 * @param dimension the dimension to check
 	 * @return true if the dimension is allowed, false otherwise
 	 */
-	boolean isDimensionAllowed(ResourceLocation dimension);
+	boolean isDimensionAllowed(Identifier dimension);
 }

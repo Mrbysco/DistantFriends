@@ -4,7 +4,7 @@ import com.mrbysco.distantfriends.DistantFriendsNeoForge;
 import com.mrbysco.distantfriends.config.FriendConfigNeoForge;
 import com.mrbysco.distantfriends.platform.services.IPlatformHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.decoration.Mannequin;
@@ -58,7 +58,7 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
 	}
 
 	@Override
-	public boolean isDimensionAllowed(ResourceLocation dimension) {
+	public boolean isDimensionAllowed(Identifier dimension) {
 		return FriendConfigNeoForge.COMMON.spawnDimensions.get().contains(dimension.toString());
 	}
 }

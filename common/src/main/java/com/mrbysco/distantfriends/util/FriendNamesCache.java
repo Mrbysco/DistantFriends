@@ -2,7 +2,7 @@ package com.mrbysco.distantfriends.util;
 
 import com.mrbysco.distantfriends.Constants;
 import com.mrbysco.distantfriends.platform.Services;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.players.UserWhiteList;
 import net.minecraft.world.entity.player.PlayerModelType;
 
@@ -83,10 +83,10 @@ public class FriendNamesCache {
 						}
 					}
 				}
-				// Validate ResourceLocation
+				// Validate Identifier
 				if (!secondEntry.isEmpty()) {
-					if (ResourceLocation.tryParse(secondEntry) == null) {
-						Constants.LOGGER.error("Malformed ResourceLocation for friend: {}, {}", entry, secondEntry);
+					if (Identifier.tryParse(secondEntry) == null) {
+						Constants.LOGGER.error("Malformed Identifier for friend: {}, {}", entry, secondEntry);
 						secondEntry = null;
 					}
 				}

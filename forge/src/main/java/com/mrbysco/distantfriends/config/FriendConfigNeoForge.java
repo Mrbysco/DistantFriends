@@ -2,7 +2,7 @@ package com.mrbysco.distantfriends.config;
 
 import com.mrbysco.distantfriends.Constants;
 import com.mrbysco.distantfriends.util.FriendNamesCache;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -36,7 +36,7 @@ public class FriendConfigNeoForge {
 					.comment("A list of dimensions where distant friends can spawn, using their resource location. ",
 							"Format: \"<namespace>:<path>\"",
 							"Example: \"minecraft:overworld\" or \"minecraft:the_nether\"")
-					.defineListAllowEmpty("spawnDimensions", List.of("minecraft:overworld"), String::new, o -> (o instanceof String) && ResourceLocation.tryParse((String) o) != null);
+					.defineListAllowEmpty("spawnDimensions", List.of("minecraft:overworld"), String::new, o -> (o instanceof String) && Identifier.tryParse((String) o) != null);
 			addWhitelistPlayers = builder
 					.comment("Add the players from the whitelist to the Friends list [default: true]")
 					.define("addWhitelistPlayers", true);
