@@ -1,17 +1,13 @@
 package com.mrbysco.distantfriends.config;
 
-import com.mrbysco.distantfriends.Constants;
-import com.mrbysco.distantfriends.util.FriendNamesCache;
 import net.minecraft.resources.Identifier;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.ModConfigSpec.ConfigValue;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 
-public class FriendConfigNeoForge {
+public class FriendConfig {
 
 	public static class Common {
 
@@ -69,17 +65,5 @@ public class FriendConfigNeoForge {
 		final Pair<Common, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(Common::new);
 		commonSpec = specPair.getRight();
 		COMMON = specPair.getLeft();
-	}
-
-	@SubscribeEvent
-	public static void onLoad(final ModConfigEvent.Loading configEvent) {
-		Constants.LOGGER.debug("Loaded Distant Friends' config file {}", configEvent.getConfig().getFileName());
-		FriendNamesCache.refreshCache();
-	}
-
-	@SubscribeEvent
-	public static void onFileChange(final ModConfigEvent.Reloading configEvent) {
-		Constants.LOGGER.debug("Distant Friends' config just got changed on the file system!");
-		FriendNamesCache.refreshCache();
 	}
 }

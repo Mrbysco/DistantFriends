@@ -37,11 +37,11 @@ public abstract class ServerLevelMixin extends Level {
 	}
 
 	@Inject(method = "<init>", at = @At(value = "RETURN"))
-	public void distantfriends$patchLevels(MinecraftServer minecraftServer, Executor executor,
-	                                       LevelStorageSource.LevelStorageAccess levelStorageAccess,
-	                                       ServerLevelData serverLevelData, ResourceKey<Level> resourceKey,
-	                                       LevelStem levelStem, boolean bl, long l, List<CustomSpawner> list,
-	                                       boolean bl2, @Nullable RandomSequences randomSequences, CallbackInfo ci) {
+	public void distantfriends$patchLevels(MinecraftServer server, Executor executor,
+	                                       LevelStorageSource.LevelStorageAccess levelStorage,
+	                                       ServerLevelData levelData, ResourceKey dimension, LevelStem levelStem,
+	                                       boolean isDebug, long biomeZoomSeed, List customSpawners, boolean tickTime,
+	                                       CallbackInfo ci) {
 		customSpawners = ImmutableList.<CustomSpawner>builder()
 				.addAll(customSpawners)
 				.add(new FriendSpawner())

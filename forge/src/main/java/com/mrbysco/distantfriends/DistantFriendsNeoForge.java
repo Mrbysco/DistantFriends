@@ -3,7 +3,7 @@ package com.mrbysco.distantfriends;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.mrbysco.distantfriends.commands.DistantCommands;
-import com.mrbysco.distantfriends.config.FriendConfigNeoForge;
+import com.mrbysco.distantfriends.config.FriendConfig;
 import com.mrbysco.distantfriends.util.FriendSpawner;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.decoration.Mannequin;
@@ -33,8 +33,7 @@ public class DistantFriendsNeoForge {
 			.serialize(Codec.BOOL.fieldOf("is_friend")).build());
 
 	public DistantFriendsNeoForge(IEventBus eventBus, ModContainer container, Dist dist) {
-		container.registerConfig(ModConfig.Type.COMMON, FriendConfigNeoForge.commonSpec);
-		eventBus.register(FriendConfigNeoForge.class);
+		container.registerConfig(ModConfig.Type.COMMON, FriendConfig.commonSpec);
 
 		ATTACHMENT_TYPES.register(eventBus);
 

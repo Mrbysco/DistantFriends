@@ -1,6 +1,7 @@
 package com.mrbysco.distantfriends;
 
 import com.mojang.datafixers.util.Either;
+import com.mrbysco.distantfriends.config.FriendConfig;
 import com.mrbysco.distantfriends.platform.Services;
 import com.mrbysco.distantfriends.util.FriendNamesCache;
 import com.mrbysco.distantfriends.util.PlayerData;
@@ -123,7 +124,7 @@ public class CommonClass {
 			final String name = data.name();
 			final String texture = data.texture();
 
-			if (Services.PLATFORM.showName()) {
+			if (FriendConfig.COMMON.showName.get()) {
 				friend.setCustomName(Component.literal(name));
 				friend.setCustomNameVisible(true);
 			}

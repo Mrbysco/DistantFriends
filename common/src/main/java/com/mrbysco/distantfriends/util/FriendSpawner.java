@@ -2,6 +2,7 @@ package com.mrbysco.distantfriends.util;
 
 import com.mrbysco.distantfriends.CommonClass;
 import com.mrbysco.distantfriends.Constants;
+import com.mrbysco.distantfriends.config.FriendConfig;
 import com.mrbysco.distantfriends.platform.Services;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -24,15 +25,14 @@ public class FriendSpawner implements CustomSpawner {
 	private static final int TICK_DELAY = 1200;
 	private int nextTick;
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void tick(ServerLevel level, boolean spawnEnemies) {
 		this.nextTick--;
 		if (this.nextTick <= 0) {
 			this.nextTick = TICK_DELAY;
 			Player player = level.getRandomPlayer();
-			if (player != null && Services.PLATFORM.isDimensionAllowed(level.dimension().identifier())) {
-				RandomSource randomsource = level.random;
+			if (player != null && FriendConfig.COMMON.spawnDimensions.get().contains(level.dimension().identifier().toDebugFileName())) {
+				RandomSource randomsource = level.getRandom();
 				BlockPos playerPos = player.blockPosition();
 				for (int attempt = 0; attempt < NUMBER_OF_SPAWN_ATTEMPTS; attempt++) {
 					int x = playerPos.getX() + randomsource.nextInt(48 * 2) - 48;

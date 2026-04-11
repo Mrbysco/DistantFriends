@@ -4,7 +4,6 @@ import com.mrbysco.distantfriends.DistantFriendsFabric;
 import com.mrbysco.distantfriends.platform.services.IPlatformHelper;
 import com.mrbysco.distantfriends.util.ServerInstance;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.decoration.Mannequin;
@@ -13,31 +12,6 @@ import net.minecraft.world.phys.AABB;
 import java.util.List;
 
 public class FabricPlatformHelper implements IPlatformHelper {
-
-	@Override
-	public List<? extends String> getFriends() {
-		return DistantFriendsFabric.config.get().general.friends;
-	}
-
-	@Override
-	public boolean addWhitelistPlayers() {
-		return DistantFriendsFabric.config.get().general.addWhitelistPlayers;
-	}
-
-	@Override
-	public boolean playerMobsCompat() {
-		return DistantFriendsFabric.config.get().compat.playerMobsCompat;
-	}
-
-	@Override
-	public List<? extends String> getPlayerMobsNameLinks() {
-		return DistantFriendsFabric.config.get().compat.playerMobsWhitelist;
-	}
-
-	@Override
-	public boolean showName() {
-		return DistantFriendsFabric.config.get().general.showName;
-	}
 
 	@Override
 	public MinecraftServer getServer() {
@@ -56,8 +30,4 @@ public class FabricPlatformHelper implements IPlatformHelper {
 		);
 	}
 
-	@Override
-	public boolean isDimensionAllowed(Identifier dimension) {
-		return DistantFriendsFabric.config.get().general.spawnDimensions.contains(dimension.toString());
-	}
 }

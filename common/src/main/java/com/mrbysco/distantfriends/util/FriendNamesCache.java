@@ -1,6 +1,7 @@
 package com.mrbysco.distantfriends.util;
 
 import com.mrbysco.distantfriends.Constants;
+import com.mrbysco.distantfriends.config.FriendConfig;
 import com.mrbysco.distantfriends.platform.Services;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.players.UserWhiteList;
@@ -25,15 +26,15 @@ public class FriendNamesCache {
 		nameList.clear();
 		nameList.addAll(generateDataList());
 
-		if (Services.PLATFORM.addWhitelistPlayers() && Services.PLATFORM.getServer() != null) {
+		if (FriendConfig.COMMON.addWhitelistPlayers.get() && Services.PLATFORM.getServer() != null) {
 			UserWhiteList whitelist = Services.PLATFORM.getServer().getPlayerList().getWhiteList();
 			Arrays.stream(whitelist.getUserList())
 					.map(PlayerData::new)
 					.forEach(nameList::add);
 		}
 
-		if (Services.PLATFORM.playerMobsCompat()) {
-			List<? extends String> links = Services.PLATFORM.getPlayerMobsNameLinks();
+		if (FriendConfig.COMMON.playerMobsCompat.get()) {
+			List<? extends String> links = FriendConfig.COMMON.playerMobsNameLinks.get();
 			for (String link : links) {
 				try {
 					URL url = new URL(link);
@@ -57,7 +58,7 @@ public class FriendNamesCache {
 	 */
 	public static List<PlayerData> generateDataList() {
 		List<PlayerData> dataList = new ArrayList<>();
-		List<? extends String> names = new ArrayList<>(Services.PLATFORM.getFriends());
+		List<? extends String> names = new ArrayList<>(FriendConfig.COMMON.friends.get());
 		for (String entry : names) {
 			if (entry.isEmpty()) {
 				continue;

@@ -2,7 +2,7 @@ package com.mrbysco.distantfriends.data;
 
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.core.HolderLookup;
 
@@ -16,7 +16,7 @@ public class DistantDatagen implements DataGeneratorEntrypoint {
 	}
 
 	private static class Language extends FabricLanguageProvider {
-		public Language(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
+		public Language(FabricPackOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
 			super(dataOutput, registryLookup);
 		}
 

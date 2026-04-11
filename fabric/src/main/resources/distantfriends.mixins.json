@@ -3,7 +3,7 @@
   "minVersion": "0.8.4",
   "package": "com.mrbysco.distantfriends.mixin",
   "refmap": "distantfriends.refmap.json",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_25",
   "mixins": [
     "LivingEntityMixin",
     "ServerLevelMixin"
