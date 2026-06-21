@@ -1,10 +1,12 @@
 package com.mrbysco.distantfriends.data;
 
+import com.mrbysco.distantfriends.Constants;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.core.HolderLookup;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -22,17 +24,23 @@ public class DistantDatagen implements DataGeneratorEntrypoint {
 
 		@Override
 		public void generateTranslations(HolderLookup.Provider registryLookup, TranslationBuilder builder) {
-			builder.add("text.autoconfig.distantfriends.title", "Distant Friends");
-			builder.add("text.autoconfig.distantfriends.option.general", "General");
-			builder.add("text.autoconfig.distantfriends.option.general.friends", "Friends");
-			builder.add("text.autoconfig.distantfriends.option.general.spawnDimensions", "Spawn Dimensions");
-			builder.add("text.autoconfig.distantfriends.option.general.addWhitelistPlayers", "Add Whitelist Players");
-			builder.add("text.autoconfig.distantfriends.option.general.showName", "Show Name");
-			builder.add("text.autoconfig.distantfriends.option.spawning", "Spawning");
-			builder.add("text.autoconfig.distantfriends.option.spawning.spawnWeight", "Spawn Weight");
-			builder.add("text.autoconfig.distantfriends.option.compat", "Compat");
-			builder.add("text.autoconfig.distantfriends.option.compat.playerMobsCompat", "Player Mobs Compat");
-			builder.add("text.autoconfig.distantfriends.option.compat.playerMobsWhitelist", "Player Mobs Whitelist");
+			addConfig(builder, "title", "Distant Friends Config", null);
+
+			addConfig(builder, "friend_settings", "Friends", "Friend Settings");
+			addConfig(builder, "friends", "Friends", "A list of users who can be chosen when it spawns a distant friend");
+			addConfig(builder, "spawnDimensions", "Friends", "A list of dimensions where distant friends can spawn, using their resource location");
+			addConfig(builder, "addWhitelistPlayers", "Add Whitelist Players", "Add the players from the whitelist to the Friends list [default: true]");
+			addConfig(builder, "showName", "Show Name", "Show the name of the friend above their head");
+
+			addConfig(builder, "compat_settings", "Compat", "Compat Settings");
+			addConfig(builder, "playerMobsCompat", "Player Mobs Compat", "Add players from a Player Mobs whitelist to the Friends list [default: false]");
+			addConfig(builder, "playerMobsNameLinks", "Player Mobs Name Links", "The player mobs Name Links");
+		}
+
+		private void addConfig(TranslationBuilder builder, String path, String name, @Nullable String description) {
+			builder.add(Constants.MOD_ID + ".configuration." + path, name);
+			if (description != null && !description.isEmpty())
+				builder.add(Constants.MOD_ID + ".configuration." + path + ".tooltip", description);
 		}
 	}
 }
