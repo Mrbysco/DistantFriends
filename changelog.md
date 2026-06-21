@@ -1,1 +1,2 @@
-* Update to 26.1.2
+* Remove leftover debug log
+* Fix config translations (Fabric)
