@@ -1,7 +1,6 @@
 package com.mrbysco.distantfriends.util;
 
 import com.mrbysco.distantfriends.CommonClass;
-import com.mrbysco.distantfriends.Constants;
 import com.mrbysco.distantfriends.config.FriendConfig;
 import com.mrbysco.distantfriends.platform.Services;
 import net.minecraft.core.BlockPos;
@@ -93,8 +92,6 @@ public class FriendSpawner implements CustomSpawner {
 
 			// Mark the mannequin as a Distant Friend
 			Services.PLATFORM.attachFriendData(friend);
-
-			Constants.LOGGER.info("{}", "Spawning a Distant Friend at " + pos);
 
 			// Attach skin and name data
 			CommonClass.attachSkin(friend);
