@@ -12,7 +12,7 @@ import net.minecraft.commands.arguments.coordinates.Vec3Argument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.decoration.Mannequin;
 import net.minecraft.world.phys.Vec3;
 
@@ -42,7 +42,7 @@ public class DistantCommands {
 		final ServerLevel level = context.getSource().getLevel();
 		BlockPos pos = BlockPos.containing(position);
 
-		Mannequin friend = EntityType.MANNEQUIN.create(level, EntitySpawnReason.COMMAND);
+		Mannequin friend = EntityTypes.MANNEQUIN.create(level, EntitySpawnReason.COMMAND);
 		if (friend != null) {
 			friend.snapTo(pos, 0.0F, 0.0F);
 

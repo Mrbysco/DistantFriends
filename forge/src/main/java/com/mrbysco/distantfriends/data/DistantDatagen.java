@@ -10,7 +10,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.random.Weighted;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -48,7 +48,7 @@ public class DistantDatagen {
 					final HolderGetter<Biome> biomeHolderGetter = context.lookup(Registries.BIOME);
 					final BiomeModifier addSpawn = BiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(
 							biomeHolderGetter.getOrThrow(BiomeTags.IS_OVERWORLD),
-							new Weighted<>(new MobSpawnSettings.SpawnerData(EntityType.MANNEQUIN, 1, 2), 20));
+							new Weighted<>(new MobSpawnSettings.SpawnerData(EntityTypes.MANNEQUIN, 1, 2), 20));
 
 					context.register(createKey("add_distant_friend"), addSpawn);
 				});

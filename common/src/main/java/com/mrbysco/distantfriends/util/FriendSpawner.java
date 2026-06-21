@@ -8,7 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.decoration.Mannequin;
 import net.minecraft.world.entity.player.Player;
@@ -39,7 +39,7 @@ public class FriendSpawner implements CustomSpawner {
 					int z = playerPos.getZ() + randomsource.nextInt(48 * 2) - 48;
 					int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
 					BlockPos blockpos = new BlockPos(x, y, z);
-					if (SpawnPlacementTypes.ON_GROUND.isSpawnPositionOk(level, blockpos, EntityType.MANNEQUIN) && noneNearby(level, blockpos) &&
+					if (SpawnPlacementTypes.ON_GROUND.isSpawnPositionOk(level, blockpos, EntityTypes.MANNEQUIN) && noneNearby(level, blockpos) &&
 							isDarkEnoughToSpawn(level, blockpos, randomsource)) {
 						this.spawnFriend(blockpos, level);
 					}
@@ -87,7 +87,7 @@ public class FriendSpawner implements CustomSpawner {
 	private void spawnFriend(BlockPos pos, ServerLevel level) {
 		if (!level.isLoaded(pos)) return;
 
-		Mannequin friend = EntityType.MANNEQUIN.create(level, EntitySpawnReason.NATURAL);
+		Mannequin friend = EntityTypes.MANNEQUIN.create(level, EntitySpawnReason.NATURAL);
 		if (friend != null) {
 			friend.snapTo(pos, 0.0F, 0.0F);
 
