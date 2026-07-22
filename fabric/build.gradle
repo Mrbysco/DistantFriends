@@ -16,6 +16,12 @@ repositories {
         url "https://maven.shedaniel.me/"
     }
     maven {
+        url "https://maven.gnomecraft.net/releases"
+        content {
+            includeGroup "com.terraformersmc"
+        }
+    }
+    maven {
         url "https://maven.terraformersmc.com/"
         content {
             includeGroup "com.terraformersmc"
