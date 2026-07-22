@@ -16,7 +16,6 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntitySelector;
@@ -266,7 +265,7 @@ public class DistantFriend extends PathfinderMob {
 
 	public static boolean checkFriendSpawn(EntityType<? extends DistantFriend> entityType, ServerLevelAccessor levelAccessor,
 										   MobSpawnType spawnType, BlockPos pos, RandomSource random) {
-		return levelAccessor.getDifficulty() != Difficulty.PEACEFUL && isDarkEnoughToSpawn(levelAccessor, pos, random) &&
+		return isDarkEnoughToSpawn(levelAccessor, pos, random) &&
 				checkMobSpawnRules(entityType, levelAccessor, spawnType, pos, random);
 	}
 
