@@ -1,2 +1,1 @@
-* Remove leftover debug log
-* Fix config translations (Fabric)
+* Backport fix for Distant Friends not spawning
