@@ -30,7 +30,7 @@ public class FriendSpawner implements CustomSpawner {
 		if (this.nextTick <= 0) {
 			this.nextTick = TICK_DELAY;
 			Player player = level.getRandomPlayer();
-			if (player != null && FriendConfig.COMMON.spawnDimensions.get().contains(level.dimension().identifier().toDebugFileName())) {
+			if (player != null && FriendConfig.COMMON.spawnDimensions.get().contains(level.dimension().identifier().toString())) {
 				RandomSource randomsource = level.getRandom();
 				BlockPos playerPos = player.blockPosition();
 				for (int attempt = 0; attempt < NUMBER_OF_SPAWN_ATTEMPTS; attempt++) {
@@ -38,8 +38,10 @@ public class FriendSpawner implements CustomSpawner {
 					int z = playerPos.getZ() + randomsource.nextInt(48 * 2) - 48;
 					int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
 					BlockPos blockpos = new BlockPos(x, y, z);
-					if (SpawnPlacementTypes.ON_GROUND.isSpawnPositionOk(level, blockpos, EntityTypes.MANNEQUIN) && noneNearby(level, blockpos) &&
-							isDarkEnoughToSpawn(level, blockpos, randomsource)) {
+					boolean positionOk = SpawnPlacementTypes.ON_GROUND.isSpawnPositionOk(level, blockpos, EntityTypes.MANNEQUIN);
+					boolean noneNearby = noneNearby(level, blockpos);
+					boolean darkEnough = isDarkEnoughToSpawn(level, blockpos, randomsource);
+					if (positionOk && noneNearby && darkEnough) {
 						this.spawnFriend(blockpos, level);
 					}
 				}
