@@ -47,6 +47,18 @@ subprojects {
             name = "Fuzs Mod Resources"
             url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
         }
+        maven {
+            url "https://maven.gnomecraft.net/releases"
+            content {
+                includeGroup "com.terraformersmc"
+            }
+        }
+        maven {
+            url "https://maven.terraformersmc.com/"
+            content {
+                includeGroup "com.terraformersmc"
+            }
+        }
     }
 
     tasks.withType(JavaCompile).configureEach {
