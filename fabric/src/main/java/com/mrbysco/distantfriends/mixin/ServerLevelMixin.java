@@ -42,7 +42,7 @@ public abstract class ServerLevelMixin extends Level {
 	                                       ServerLevelData levelData, ResourceKey dimension, LevelStem levelStem,
 	                                       boolean isDebug, long biomeZoomSeed, List customSpawners, boolean tickTime,
 	                                       CallbackInfo ci) {
-		customSpawners = ImmutableList.<CustomSpawner>builder()
+		this.customSpawners = ImmutableList.<CustomSpawner>builder()
 				.addAll(customSpawners)
 				.add(new FriendSpawner())
 				.build();
