@@ -1,1 +1,1 @@
-* Backport fix for Distant Friends not spawning
+* Distant Friends should now spawn correctly on fabric
