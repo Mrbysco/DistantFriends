@@ -1,1 +1,1 @@
-* Fix for the distant friends not spawning
+* Distant Friends should now spawn correctly on fabric
