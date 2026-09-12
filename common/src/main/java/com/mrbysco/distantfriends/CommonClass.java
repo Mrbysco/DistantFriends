@@ -2,7 +2,6 @@ package com.mrbysco.distantfriends;
 
 import com.mojang.datafixers.util.Either;
 import com.mrbysco.distantfriends.config.FriendConfig;
-import com.mrbysco.distantfriends.platform.Services;
 import com.mrbysco.distantfriends.util.FriendNamesCache;
 import com.mrbysco.distantfriends.util.PlayerData;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
