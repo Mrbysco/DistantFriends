@@ -1,1 +1,1 @@
-* Distant Friends should now spawn correctly on fabric
+* Update to 26.3
