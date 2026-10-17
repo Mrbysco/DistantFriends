@@ -33,7 +33,7 @@ public class DistantFriendsNeoForge {
 			.serialize(Codec.BOOL.fieldOf("is_friend")).build());
 
 	public DistantFriendsNeoForge(IEventBus eventBus, ModContainer container, Dist dist) {
-		container.registerConfig(ModConfig.Type.COMMON, FriendConfig.commonSpec);
+		container.registerConfig(ModConfig.Type.LOCAL, FriendConfig.commonSpec);
 
 		ATTACHMENT_TYPES.register(eventBus);
 

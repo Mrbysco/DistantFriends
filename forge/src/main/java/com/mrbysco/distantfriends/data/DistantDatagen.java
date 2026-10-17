@@ -2,60 +2,43 @@ package com.mrbysco.distantfriends.data;
 
 import com.mrbysco.distantfriends.Constants;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.random.Weighted;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import net.neoforged.neoforge.common.world.BiomeModifier;
 import net.neoforged.neoforge.common.world.BiomeModifiers;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.data.event.GatherDataRegistryEntriesEvent;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-
 @EventBusSubscriber
 public class DistantDatagen {
-
 	@SubscribeEvent
-	public static void gatherData(GatherDataEvent.Client event) {
-		DataGenerator generator = event.getGenerator();
-		PackOutput packOutput = generator.getPackOutput();
-		CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
-
-		generator.addProvider(true, new Datapack(
-				packOutput, lookupProvider, Set.of(Constants.MOD_ID)));
-
-		generator.addProvider(true, new Language(packOutput));
-
-	}
-
-	private static class Datapack extends DatapackBuiltinEntriesProvider {
-		public static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
+	static void onGatherRegistries(GatherDataRegistryEntriesEvent event) {
+		event.gatherFor(Constants.MOD_ID)
 				.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, context -> {
 					final HolderGetter<Biome> biomeHolderGetter = context.lookup(Registries.BIOME);
 					final BiomeModifier addSpawn = BiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(
 							biomeHolderGetter.getOrThrow(BiomeTags.IS_OVERWORLD),
-							new Weighted<>(new MobSpawnSettings.SpawnerData(EntityTypes.MANNEQUIN, 1, 2), 20));
+							new Weighted<>(new MobSpawnSettings.SpawnerData(EntityTypes.MANNEQUIN, UniformInt.of(1, 2)), 20));
 
 					context.register(createKey("add_distant_friend"), addSpawn);
 				});
+	}
 
-		public Datapack(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, Set<String> modIds) {
-			super(output, registries, BUILDER, modIds);
-		}
+	@SubscribeEvent
+	public static void gatherData(GatherDataEvent.Client event) {
+		event.createProvider(Language::new);
 	}
 
 	private static ResourceKey<BiomeModifier> createKey(String name) {
