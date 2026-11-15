@@ -13,6 +13,8 @@ public class FriendConfig {
 
 		public final ConfigValue<List<? extends String>> friends;
 		public final ConfigValue<List<? extends String>> spawnDimensions;
+		public final ConfigValue<List<? extends String>> biomeBlacklist;
+		public final ModConfigSpec.BooleanValue invertBlacklist;
 		public final ModConfigSpec.BooleanValue addWhitelistPlayers;
 		public final ModConfigSpec.BooleanValue showName;
 
@@ -29,10 +31,18 @@ public class FriendConfig {
 							"Example: \"darkosto\" or \"darkosto,minecraft:entity/player/slim/noor,slim\"")
 					.defineListAllowEmpty("friends", List.of("darkosto", "shynieke", "mrbysco"), String::new, o -> (o instanceof String));
 			spawnDimensions = builder
-					.comment("A list of dimensions where distant friends can spawn, using their resource location. ",
+					.comment("A list of dimensions where distant friends can spawn, using their identifier. ",
 							"Format: \"<namespace>:<path>\"",
 							"Example: \"minecraft:overworld\" or \"minecraft:the_nether\"")
 					.defineListAllowEmpty("spawnDimensions", List.of("minecraft:overworld"), String::new, o -> (o instanceof String) && Identifier.tryParse((String) o) != null);
+			biomeBlacklist = builder
+					.comment("A list of biomes where distant friends cannot spawn, using their identifier. ",
+							"Format: \"<namespace>:<path>\"",
+							"Example: \"minecraft:plains\" or \"minecraft:desert\"")
+					.defineListAllowEmpty("biomeBlacklist", List.of(), String::new, o -> (o instanceof String) && Identifier.tryParse((String) o) != null);
+			invertBlacklist = builder
+					.comment("Invert the biome blacklist to create a whitelist [default: false]")
+					.define("invertBlacklist", false);
 			addWhitelistPlayers = builder
 					.comment("Add the players from the whitelist to the Friends list [default: true]")
 					.define("addWhitelistPlayers", true);

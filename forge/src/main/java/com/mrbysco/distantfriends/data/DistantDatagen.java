@@ -27,7 +27,9 @@ public class DistantDatagen {
 
 			addConfig("friend_settings", "Friends", "Friend Settings");
 			addConfig("friends", "Friends", "A list of users who can be chosen when it spawns a distant friend");
-			addConfig("spawnDimensions", "Friends", "A list of dimensions where distant friends can spawn, using their resource location");
+			addConfig("spawnDimensions", "Friends", "A list of dimensions where distant friends can spawn, using their identifier");
+			addConfig("biomeBlacklist", "Biome Blacklist", "A list of biomes where distant friends cannot spawn, using their identifier");
+			addConfig("invertBlacklist", "Invert Blacklist", "Invert the biome blacklist to create a whitelist [default: false]");
 			addConfig("addWhitelistPlayers", "Add Whitelist Players", "Add the players from the whitelist to the Friends list [default: true]");
 			addConfig("showName", "Show Name", "Show the name of the friend above their head");
 

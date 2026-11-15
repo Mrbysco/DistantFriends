@@ -29,6 +29,8 @@ public class DistantDatagen implements DataGeneratorEntrypoint {
 			addConfig(builder, "friend_settings", "Friends", "Friend Settings");
 			addConfig(builder, "friends", "Friends", "A list of users who can be chosen when it spawns a distant friend");
 			addConfig(builder, "spawnDimensions", "Friends", "A list of dimensions where distant friends can spawn, using their resource location");
+			addConfig(builder, "biomeBlacklist", "Biome Blacklist", "A list of biomes where distant friends cannot spawn, using their identifier");
+			addConfig(builder, "invertBlacklist", "Invert Blacklist", "Invert the biome blacklist to create a whitelist [default: false]");
 			addConfig(builder, "addWhitelistPlayers", "Add Whitelist Players", "Add the players from the whitelist to the Friends list [default: true]");
 			addConfig(builder, "showName", "Show Name", "Show the name of the friend above their head");
 

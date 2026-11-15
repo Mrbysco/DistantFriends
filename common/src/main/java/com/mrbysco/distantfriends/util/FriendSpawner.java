@@ -4,6 +4,8 @@ import com.mrbysco.distantfriends.CommonClass;
 import com.mrbysco.distantfriends.config.FriendConfig;
 import com.mrbysco.distantfriends.platform.Services;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -14,7 +16,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.CustomSpawner;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.Heightmap;
+
+import java.util.List;
 
 /**
  * Custom spawner for Distant Friends (Mannequins)
@@ -41,7 +46,8 @@ public class FriendSpawner implements CustomSpawner {
 					boolean positionOk = SpawnPlacementTypes.ON_GROUND.isSpawnPositionOk(level, blockpos, EntityTypes.MANNEQUIN);
 					boolean noneNearby = noneNearby(level, blockpos);
 					boolean darkEnough = isDarkEnoughToSpawn(level, blockpos, randomsource);
-					if (positionOk && noneNearby && darkEnough) {
+					boolean isCorrectBiome = isCorrectBiome(level, blockpos);
+					if (positionOk && noneNearby && darkEnough && isCorrectBiome) {
 						this.spawnFriend(blockpos, level);
 					}
 				}
@@ -100,5 +106,23 @@ public class FriendSpawner implements CustomSpawner {
 
 			level.addFreshEntityWithPassengers(friend);
 		}
+	}
+
+	/**
+	 * Check if the biome at the given position is correct for spawning a Distant Friend
+	 *
+	 * @param level    the level
+	 * @param blockpos the position to check
+	 * @return true if the biome is correct, false otherwise
+	 */
+	private boolean isCorrectBiome(ServerLevel level, BlockPos blockpos) {
+		Holder<Biome> biome = level.getBiome(blockpos);
+		if (biome.unwrapKey().isPresent()) {
+			Identifier biomeId = biome.unwrapKey().orElseThrow().identifier();
+			List<? extends String> blacklist = FriendConfig.COMMON.biomeBlacklist.get();
+			boolean inverted = FriendConfig.COMMON.invertBlacklist.getAsBoolean();
+			return inverted == blacklist.contains(biomeId.toString());
+		}
+		return true;
 	}
 }
